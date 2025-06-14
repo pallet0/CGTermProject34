@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>별주부전 - 인터랙티브 동화</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0e6d2;
+        }
+        
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* 타이틀 화면 UI */
+        #title-ui {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #4a4a4a;
+            z-index: 10;
+        }
+        
+        #title-ui h1 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        #title-ui p {
+            font-size: 1.2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* 선택지 버튼 스타일 */
+        .choice-buttons {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 2rem;
+            z-index: 10;
+        }
+        
+        .choice-button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background-color: #8b7355;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .choice-button:hover {
+            background-color: #6b5745;
+            transform: scale(1.05);
+        }
+        
+        /* 엔딩 카드 스타일 */
+        .ending-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #4a4a4a;
+            z-index: 10;
+            display: none;
+        }
+        
+        .ending-card h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .ending-card p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .restart-button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background-color: #5a8a5a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-button:hover {
+            background-color: #4a7a4a;
+            transform: scale(1.05);
+        }
+        
+        /* 화면 전환 효과 */
+        #transition-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+            transition: opacity 0.8s ease-in-out;
+        }
+        
+        #transition-overlay.active {
+            opacity: 1;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <!-- Three.js 캔버스가 여기에 추가됩니다 -->
+    </div>
+    
+    <!-- 타이틀 화면 UI -->
+    <div id="title-ui">
+        <h1>별주부전</h1>
+        <p>아무 곳이나 눌러 시작하세요</p>
+    </div>
+    
+    <!-- Scene 7 선택지 버튼 -->
+    <div class="choice-buttons" id="choice-buttons">
+        <button class="choice-button" id="choice-a">토끼를 따라간다</button>
+        <button class="choice-button" id="choice-b">용궁에 남는다</button>
+    </div>
+    
+    <!-- 엔딩 카드 A -->
+    <div class="ending-card" id="ending-a">
+        <h2>해피 엔딩</h2>
+        <p>토끼의 지혜로 모두가 행복해졌습니다.</p>
+        <button class="restart-button" onclick="restartStory()">다시하기</button>
+    </div>
+    
+    <!-- 엔딩 카드 B -->
+    <div class="ending-card" id="ending-b">
+        <h2>또 다른 엔딩</h2>
+        <p>거북이는 용궁에서 평화롭게 살았습니다.</p>
+        <button class="restart-button" onclick="restartStory()">다시하기</button>
+    </div>
+    
+    <!-- 화면 전환 오버레이 -->
+    <div id="transition-overlay"></div>
+    
+    <!-- Three.js 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- 프로젝트 스크립트 -->
+    <script src="js/utils/TransitionEffect.js"></script>
+    <script src="js/scenes/TitleScene.js"></script>
+    <script src="js/scenes/StoryScenes.js"></script>
+    <script src="js/scenes/EndingScenes.js"></script>
+    <script src="js/SceneManager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
