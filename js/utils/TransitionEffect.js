@@ -21,3 +21,5 @@ class TransitionEffect {
         }, 500);
     }
 }
+
+export default TransitionEffect;

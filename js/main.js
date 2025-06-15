@@ -1,3 +1,5 @@
+import SceneManager from './SceneManager.js';
+
 // 메인 진입점 - 전체 애플리케이션 초기화
 let sceneManager;
 
@@ -17,7 +19,8 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 전역 함수 - 다시하기 버튼 클릭 시 호출
-function restartStory() {
-    sceneManager.goToTitle();
+export function restartStory() {
+    if (sceneManager) sceneManager.goToTitle();
 }
+
+window.restartStory = restartStory;

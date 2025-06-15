@@ -68,6 +68,24 @@
             transform: scale(1.05);
         }
         
+        /* Next 버튼 */
+        .next-button {
+            position: absolute;
+            right: 3%;
+            bottom: 5%;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            background-color: #5c8ab3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.3s, transform 0.3s;
+            z-index: 10;
+        }
+        .next-button:hover { background-color: #4a769b; transform: scale(1.05); }
+        
         /* 엔딩 카드 스타일 */
         .ending-card {
             position: absolute;
@@ -147,6 +165,9 @@
         <button class="choice-button" id="choice-b">용궁에 남는다</button>
     </div>
     
+    <!-- Next 버튼 -->
+    <button id="next-btn" class="next-button">다음 ▶</button>
+    
     <!-- 엔딩 카드 A -->
     <div class="ending-card" id="ending-a">
         <h2>해피 엔딩</h2>
@@ -164,17 +185,25 @@
     <!-- 화면 전환 오버레이 -->
     <div id="transition-overlay"></div>
     
-    <!-- Three.js 라이브러리 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    
-    <!-- 프로젝트 스크립트 -->
-    <script src="js/utils/TransitionEffect.js"></script>
-    <script src="js/scenes/TitleScene.js"></script>
-    <script src="js/scenes/StoryScenes.js"></script>
-    <script src="js/scenes/EndingScenes.js"></script>
-    <script src="js/SceneManager.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Three.js import map : 'three' & 'three/addons/' 별칭을 CDN으로 매핑 -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
+        }
+      }
+    </script>
+
+    <!-- 환경 Scene 래퍼 모듈 (전역 함수 노출) -->
+    <script type="module" src="js/envScenesWrapper.js"></script>
+
+    <!-- 프로젝트 스크립트 (모두 ES Module) -->
+    <script type="module" src="js/utils/TransitionEffect.js"></script>
+    <script type="module" src="js/scenes/TitleScene.js"></script>
+    <script type="module" src="js/scenes/StoryScenes.js"></script>
+    <script type="module" src="js/scenes/EndingScenes.js"></script>
+    <script type="module" src="js/SceneManager.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

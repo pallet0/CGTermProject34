@@ -1,3 +1,9 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import TransitionEffect from './utils/TransitionEffect.js';
+import TitleScene from './scenes/TitleScene.js';
+import { StoryScene } from './scenes/StoryScenes.js';
+
 // SceneManager - 모든 scene을 관리하고 전환을 처리
 class SceneManager {
     constructor(container) {
@@ -41,19 +47,21 @@ class SceneManager {
         
         // 스토리 scenes (1-9)
         for (let i = 1; i <= 9; i++) {
-            this.scenes.push(new StoryScene(i));
+            this.scenes.push(new StoryScene(i, this.renderer, this.renderer.domElement));
         }
     }
     
     setupEventListeners() {
-        // 화면 클릭 이벤트
-        this.container.addEventListener('click', (event) => {
-            // 현재 scene이 타이틀이거나 일반 스토리 scene인 경우
-            if (this.currentSceneIndex === 0 || 
-                (this.currentSceneIndex >= 1 && this.currentSceneIndex <= 6)) {
-                this.nextScene();
-            }
-        });
+        // 다음 버튼 클릭 이벤트
+        const nextBtn = document.getElementById('next-btn');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                // 타이틀(0) ~ Scene6 까지만 next 로 이동
+                if (this.currentSceneIndex >= 0 && this.currentSceneIndex <= 6) {
+                    this.nextScene();
+                }
+            });
+        }
         
         // Scene 7의 선택지 버튼 이벤트
         document.getElementById('choice-a').addEventListener('click', () => {
@@ -121,19 +129,21 @@ class SceneManager {
         if (scene) {
             scene.activate();
 
-            this.controls = new THREE.OrbitControls(scene.camera, this.renderer.domElement);
+            this.controls = new OrbitControls(scene.camera, this.renderer.domElement);
             this.controls.enableDamping = true;
             this.controls.dampingFactor = 0.1;              // 더 부드럽게 감쇠
             this.controls.minPolarAngle = Math.PI * 0.1;    // 위로 너무 올라가지 않게
-            this.controls.maxPolarAngle = Math.PI * 0.4;    // 아래로 너무 내려가지 않게
+            this.controls.maxPolarAngle = Math.PI * 0.5;    // 아래로 너무 내려가지 않게
 
             // UI 표시 처리
             if (index === 0) {
                 // 타이틀 화면 UI 표시
                 document.getElementById('title-ui').style.display = 'block';
+                document.getElementById('next-btn').style.display = 'block';
             } else if (index === 7) {
                 // Scene 7 선택지 버튼 표시
                 document.getElementById('choice-buttons').style.display = 'flex';
+                document.getElementById('next-btn').style.display = 'none';
             } else if (index === 8) {
                 // 엔딩 A 표시 (Scene 8 다음)
                 setTimeout(() => {
@@ -144,7 +154,17 @@ class SceneManager {
                 setTimeout(() => {
                     document.getElementById('ending-b').style.display = 'block';
                 }, 2000);
+            } else {
+                // 일반 스토리 1~6
+                document.getElementById('next-btn').style.display = 'block';
             }
+
+            this.controls.addEventListener('change', () => {
+                const pos = scene.camera.position;
+                const target = this.controls.target;
+                console.log('카메라 위치:', `[${pos.x.toFixed(1)}, ${pos.y.toFixed(1)}, ${pos.z.toFixed(1)}]`);
+                console.log('카메라 방향:', `[${target.x.toFixed(1)}, ${target.y.toFixed(1)}, ${target.z.toFixed(1)}]`);
+            });
         }
     }
     
@@ -156,6 +176,7 @@ class SceneManager {
             // UI 숨기기 처리
             if (index === 0) {
                 document.getElementById('title-ui').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'none';
             } else if (index === 7) {
                 document.getElementById('choice-buttons').style.display = 'none';
             }
@@ -168,6 +189,7 @@ class SceneManager {
         document.getElementById('choice-buttons').style.display = 'none';
         document.getElementById('ending-a').style.display = 'none';
         document.getElementById('ending-b').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
     }
     
     onWindowResize() {
@@ -186,3 +208,5 @@ class SceneManager {
         });
     }
 }
+
+export default SceneManager;

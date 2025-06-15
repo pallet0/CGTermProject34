@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 // TitleScene - 타이틀 화면 scene
 class TitleScene {
     constructor() {
@@ -91,3 +93,5 @@ class TitleScene {
         });
     }
 }
+
+export default TitleScene;
