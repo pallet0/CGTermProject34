@@ -35,6 +35,35 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   group.add(floor);
 
+  //해변 plane
+  let beach1, beach2, beach3, beach4;
+  const beachGeometry = new THREE.PlaneGeometry(4, 4, 1, 1);
+  const beachMaterial = new THREE.MeshBasicMaterial({ color: 0xF5DEB3, transparent: true, opacity: 1 });
+  const beach = new THREE.Mesh(beachGeometry, beachMaterial);
+  beach.position.set(0, -2, 1);
+  beach.rotation.x = -Math.PI / 10;
+  group.add(beach);
+
+  beach1=beach.clone();
+  beach1.position.set(4, -2, 1);
+  beach1.rotation.x = -Math.PI / 10;
+  group.add(beach1);
+
+  beach2=beach.clone();
+  beach2.position.set(-4, -2, 1);
+  beach2.rotation.x = -Math.PI / 10;
+  group.add(beach2);
+
+  beach3=beach.clone();
+  beach3.position.set(-4, 0, 1);
+  beach3.rotation.x=0;
+  group.add(beach3);
+
+  beach4=beach.clone();
+  beach4.position.set(4, 0, 1);
+  beach4.rotation.x=0;
+  group.add(beach4);
+
   // Skybox
   const cubetextureloader = new THREE.CubeTextureLoader();
   const skybox = cubetextureloader.load([

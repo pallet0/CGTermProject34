@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   // -------------------- 기본 상수 --------------------
-  const waterPosition = new THREE.Vector3(0, 0, 1);
+  const waterPosition = new THREE.Vector3(0, 0, 2);
   const near = 0.;
   const far = 2.;
   const waterSize = 512;
@@ -51,7 +51,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   // 수조 벽 생성
   const textureLoader = new THREE.TextureLoader();
   const tankSize = 4;
-  const tankHeight = 1;
+  const tankHeight = 2;
   let wall1, wall2, wall3, wall4;
   textureLoader.load('js/assets/ocean/ocean2.png', (tileTexture) => {
     tileTexture.wrapS = tileTexture.wrapT = THREE.RepeatWrapping;
@@ -113,13 +113,17 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     }
 
     addDrop(renderer, x, y, radius, strength) {
+      if (!this._dropMesh || !this._dropMesh.material) return;
       this._dropMesh.material.uniforms['center'].value = [x, y];
       this._dropMesh.material.uniforms['radius'].value = radius;
       this._dropMesh.material.uniforms['strength'].value = strength;
       this._render(renderer, this._dropMesh);
     }
 
-    stepSimulation(renderer) { this._render(renderer, this._updateMesh); }
+    stepSimulation(renderer) { 
+      if (!this._updateMesh || !this._updateMesh.material) return;
+      this._render(renderer, this._updateMesh); 
+    }
 
     _render(renderer, mesh) {
       const _oldTarget = this.target;
@@ -245,8 +249,6 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     intersects.forEach(intersect => waterSimulation.addDrop(renderer, intersect.point.x, intersect.point.y, 0.03, 0.02));
   }
 
-  canvas.addEventListener('mousemove', onMouseMove);
-
   const loaded = [waterSimulation.loaded, water.loaded, environmentMap.loaded, environment.loaded, caustics.loaded];
 
   Promise.all(loaded).then(() => {
@@ -257,9 +259,12 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     caustics.setDeltaEnvTexture(1 / environmentMap.size);
 
     // 초기 잔물결
-    for (let i = 0; i < 5; i++) {
-      waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, 0.03, (i & 1) ? 0.02 : -0.02);
+    for (let i = 0; i < 20; i++) {
+      waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, 0.08, (i & 1) ? 0.05 : -0.05);
     }
+
+    // 마우스 이벤트 리스너 등록
+    canvas.addEventListener('mousemove', onMouseMove);
   });
 
   function update() {

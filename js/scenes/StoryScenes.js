@@ -34,15 +34,15 @@ class StoryScene {
         
         // Scene별 카메라 위치 설정
         const cameraPositions = {
-            1: { pos: [0, 10, 20], lookAt: [0, 0, 0] },      // S1(용궁) - 용왕님 원생부족
-            2: { pos: [10, 5, 10], lookAt: [0, 0, 0] },     // S2(해안) - 거북이 토끼 조우
-            3: { pos: [-5, 8, 15], lookAt: [0, 2, 0] },     // S3(용궁) - 토끼 인턴 시작
-            4: { pos: [0, 5, 15], lookAt: [0, 2, 0] },      // S4(용궁) - 용왕이 토끼에 석사 전환 권유, 토끼 친구 핑계
+            1: { pos: [-1.4, -1.6, 0.6], lookAt: [0, 0, 0] },      // S1(용궁) - 용왕님 원생부족
+            2: { pos: [-3.3, 1.4, 2.8], lookAt: [0, 0, 0] },     // S2(해안) - 거북이 토끼 조우
+            3: { pos: [-1.4, -1.6, 0.65], lookAt: [0, 2, 0] },     // S3(용궁) - 토끼 인턴 시작
+            4: { pos: [-1.4, -1.6, 0.6], lookAt: [0, 2, 0] },      // S4(용궁) - 용왕이 토끼에 석사 전환 권유, 토끼 친구 핑계
             5: { pos: [-9.4, -10.0, -10], lookAt: [-2, 2, 0] },     // S5(숲속) - 거북이가 토끼 에스코트해 땅으로 옴, 나무 위 동방에서 친구 데려오기
             6: { pos: [-3.3, -11.2, 0.0], lookAt: [-2, 2, 0] },     // S6-1(숲속) - 친구를 진짜 데려옴
             7: { pos: [-3.3, -11.2, 0.0], lookAt: [0,0, 0] },      // S6-2(숲속, 한 나무 근처) - 토끼가 나무 위로 올라감(대학원생은 동아리 가입 금지)
-            8: { pos: [5, 7, 12], lookAt: [0, 2, -2] },     // S7-1(용궁) - 거1토2 행복한 대학원 라이프
-            9: { pos: [-5, 10, 15], lookAt: [0, 0, 0] }     // S7-2(용궁) - 거북이 홀로 돌아와 용궁과 대면
+            8: { pos: [-1.4, -1.6, 0.6], lookAt: [0, 2, -2] },     // S7-1(용궁) - 거1토2 행복한 대학원 라이프
+            9: { pos: [-1.4, -1.6, 0.6], lookAt: [0, 0, 0] }     // S7-2(용궁) - 거북이 홀로 돌아와 용궁과 대면
         };
         
         const config = cameraPositions[this.sceneNumber];
@@ -147,39 +147,48 @@ class StoryScene {
     setupCharacters() {
         // 임시 캐릭터 (나중에 GLTF로 대체)
         // 용왕
-        if ([1, 2, 8].includes(this.sceneNumber)) {
+        if ([1, 3, 4, 8, 9].includes(this.sceneNumber)) {
             const dragonKing = this.createCharacter(0xff0000, 2/10);
-            dragonKing.position.set(0, 3, -5);
-            // this.scene.add(dragonKing);
+            const dragonKingPositions = {
+                1: [0.7,0,0.5],
+                3: [0.7,0,0.5],
+                4: [0.7,0,0.5],
+                8: [0.7,0,0.5],
+                9: [0.7,0,0.5]
+            };
+            dragonKing.position.set(...dragonKingPositions[this.sceneNumber]);
+            this.scene.add(dragonKing);
         }
         
         // 거북이
         if ([1, 2, 3, 4, 5, 6, 7, 8, 9].includes(this.sceneNumber)) {
             const turtle = this.createCharacter(0x00ff00, 1.5/10);
             const turtlePositions = {
-                1: [3,1,0],
-                2: [2, 1, -3],
-                3: [0, 1, 5],
-                4: [-2, 1, 3],
+                1: [0,0,0.5],
+                2: [0, -2.3, 2],
+                3: [0, 1, 0.5],
+                4: [-2, 1, 0.5],
                 5: [-5, -3, -2],
                 6: [-7,2, -3],
                 7: [-7,2, -3],
-                8: [2, 1, 0],
-                9: [-2, 1, -2]
+                8: [1, 1, 0.5],
+                9: [-1, 1, 0.5]
             };
             turtle.position.set(...turtlePositions[this.sceneNumber]);
             this.scene.add(turtle);
         }
         
         // 토끼
-        if ([4, 5, 6, 7, 8].includes(this.sceneNumber)) {
+        if ([2, 3, 4, 5, 6, 7, 8].includes(this.sceneNumber)) {
             const rabbit = this.createCharacter(0xffffff, 1/10);
             const rabbitPositions = {
-                4: [3, 1, 5],
+                2: [-0.6, -2.5, 2],
+                3: [-0.6, -0.5, 0.5],
+                4: [0.7, 1, 0.5],
                 5: [-5, -1, -3],
                 6: [-8,3, -3],
                 7: [-8,3, -3],
-                8: [0, 1, -3]
+                8: [0, 1, 0.5]
             };
             rabbit.position.set(...rabbitPositions[this.sceneNumber]);
             this.scene.add(rabbit);
