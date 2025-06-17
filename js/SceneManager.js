@@ -132,8 +132,15 @@ class SceneManager {
             this.controls = new OrbitControls(scene.camera, this.renderer.domElement);
             this.controls.enableDamping = true;
             this.controls.dampingFactor = 0.1;              // 더 부드럽게 감쇠
-            this.controls.minPolarAngle = Math.PI * 0.1;    // 위로 너무 올라가지 않게
+            this.controls.minPolarAngle = Math.PI * 0.2;    // 위로 너무 올라가지 않게
             this.controls.maxPolarAngle = Math.PI * 0.5;    // 아래로 너무 내려가지 않게
+            this.controls.enableZoom = false;
+            
+            const savedLookAt = scene.camera.userData?.lookAt;
+            if (savedLookAt) {
+                this.controls.target.set(...savedLookAt);
+                this.controls.update();
+            }
 
             // UI 표시 처리
             if (index === 0) {
