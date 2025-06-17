@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   // -------------------- 기본 상수 --------------------
@@ -35,34 +36,35 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   group.add(floor);
 
-  //해변 plane
-  let beach1, beach2, beach3, beach4;
-  const beachGeometry = new THREE.PlaneGeometry(4, 4, 1, 1);
-  const beachMaterial = new THREE.MeshBasicMaterial({ color: 0xF5DEB3, transparent: true, opacity: 1 });
-  const beach = new THREE.Mesh(beachGeometry, beachMaterial);
-  beach.position.set(0, -2, 1);
-  beach.rotation.x = -Math.PI / 10;
-  group.add(beach);
+  //해변
+  const loader = new GLTFLoader();
+  loader.load('glsl/beach.glb', (gltf) => {
+    const beachSet = gltf.scene;
 
-  beach1=beach.clone();
-  beach1.position.set(4, -2, 1);
-  beach1.rotation.x = -Math.PI / 10;
-  group.add(beach1);
+    // 필요하면 스케일·위치 조정
+    beachSet.rotation.x = Math.PI / 2;
+    beachSet.scale.set(0.5, 0.5, 0.5);      // 전체 크기
+    beachSet.position.set(0, 0, 0);   // 바닥 기준 위치
 
-  beach2=beach.clone();
-  beach2.position.set(-4, -2, 1);
-  beach2.rotation.x = -Math.PI / 10;
-  group.add(beach2);
+    // 그림자 옵션
+    beachSet.traverse(obj => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+        // 과도한 금속 광택 제거
+        if (obj.material && obj.material.isMeshStandardMaterial) {
+          obj.material.metalness = 0.1;   // 금속성 제거
+          obj.material.needsUpdate = true;
+        }
+      }
+    });
 
-  beach3=beach.clone();
-  beach3.position.set(-4, 0, 1);
-  beach3.rotation.x=0;
-  group.add(beach3);
+    group.add(beachSet);
+  }, undefined, (err) => {
+    console.error('beachSet 로드 실패', err);
+  });
 
-  beach4=beach.clone();
-  beach4.position.set(4, 0, 1);
-  beach4.rotation.x=0;
-  group.add(beach4);
+
 
   // Skybox
   const cubetextureloader = new THREE.CubeTextureLoader();
@@ -73,8 +75,24 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   ]);
   scene.background = skybox;
 
-  const ambient = new THREE.AmbientLight(0xffffff, 1.5);
+  // 기존 AmbientLight 제거 후 동화풍 HemisphereLight 추가
+  const ambient = new THREE.HemisphereLight(0xfff1e0, 0xadd8ff, 0.3); // intensity 0.7로 살짝 감소
   group.add(ambient);
+
+  // 태양 역할의 PointLight 추가 (그림자용)
+  const sun = new THREE.PointLight(0xfff7c0, 1.0, 50); // 노란빛, 강도 1.0, 거리 50
+  sun.position.set(5, 5, 10);   // 빛의 위치
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(4096, 4096); // 해상도 2배
+  sun.shadow.bias = -0.002; // 그림자 경계 더 선명하게
+  sun.shadow.camera.near = 0.5;
+  // 그림자 카메라 범위 확대(필요 시 조정)
+  const d = 8;
+  sun.shadow.camera.left   = -d;
+  sun.shadow.camera.right  = d;
+  sun.shadow.camera.top    = d;
+  sun.shadow.camera.bottom = -d;
+  group.add(sun);
 
   // 수조 벽 생성
   const textureLoader = new THREE.TextureLoader();
