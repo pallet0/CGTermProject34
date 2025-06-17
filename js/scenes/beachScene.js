@@ -274,7 +274,7 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   // 마우스 드롭 이벤트
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  const targetgeometry = new THREE.PlaneGeometry(2, 2);
+  const targetgeometry = new THREE.PlaneGeometry(4, 4);
   const posAttr = targetgeometry.attributes.position;
   for (let i = 0; i < posAttr.count; i++) posAttr.setZ(i, waterPosition.z);
   posAttr.needsUpdate = true;

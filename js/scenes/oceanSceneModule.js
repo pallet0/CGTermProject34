@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   // -------------------- 기본 상수 --------------------
-  const waterPosition = new THREE.Vector3(0, 0, 2);
+  const waterPosition = new THREE.Vector3(0, 0, 10);
   const near = 0.;
   const far = 2.;
   const waterSize = 512;
@@ -26,12 +26,12 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
 
   // 라이트
   const light = [0., 0., -1.];
-  const lightCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, near, far);
-  lightCamera.position.set(0., 0., 0.5);
+  const lightCamera = new THREE.OrthographicCamera(-10, 10, 10, -10, near, far); //1.2
+  lightCamera.position.set(0., 0., 0.5);//1.5
   lightCamera.lookAt(0, 0, 0);
 
   // 지면 (바닥)
-  const floorGeometry = new THREE.PlaneGeometry(4, 4, 1, 1);
+  const floorGeometry = new THREE.PlaneGeometry(20, 20, 1, 1);
   const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0 });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   group.add(floor);
@@ -50,8 +50,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
 
   // 수조 벽 생성
   const textureLoader = new THREE.TextureLoader();
-  const tankSize = 4;
-  const tankHeight = 2;
+  const tankSize = 20;
+  const tankHeight = 10;
   let wall1, wall2, wall3, wall4;
   textureLoader.load('js/assets/ocean/ocean2.png', (tileTexture) => {
     tileTexture.wrapS = tileTexture.wrapT = THREE.RepeatWrapping;
@@ -139,8 +139,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
 
   class Water {
     constructor() {
-      this.geometry = new THREE.PlaneGeometry(4, 4, waterSize, waterSize);
-      const shadersPromises = [loadFileLocal('js/shaders/water/vertex.glsl'), loadFileLocal('js/shaders/water/fragment.glsl')];
+      this.geometry = new THREE.PlaneGeometry(20, 20, waterSize, waterSize);
+      const shadersPromises = [loadFileLocal('js/shaders/water/vertex2.glsl'), loadFileLocal('js/shaders/water/fragment.glsl')];
       this.loaded = Promise.all(shadersPromises).then(([vertexShader, fragmentShader]) => {
         this.material = new THREE.ShaderMaterial({
           uniforms: { light: { value: light }, water: { value: null }, envMap: { value: null }, skybox: { value: skybox } },
@@ -181,8 +181,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   class Caustics {
     constructor() {
       this.target = new THREE.WebGLRenderTarget(waterSize * 3, waterSize * 3, { type: THREE.FloatType });
-      this._waterGeometry = new THREE.PlaneGeometry(4, 4, waterSize, waterSize);
-      const prom = [loadFileLocal('js/shaders/caustics/water_vertex.glsl'), loadFileLocal('js/shaders/caustics/water_fragment.glsl')];
+      this._waterGeometry = new THREE.PlaneGeometry(20, 20, waterSize, waterSize);
+      const prom = [loadFileLocal('js/shaders/caustics/water_vertex2.glsl'), loadFileLocal('js/shaders/caustics/water_fragment.glsl')];
       this.loaded = Promise.all(prom).then(([v, f]) => {
         this._waterMaterial = new THREE.ShaderMaterial({ uniforms: { light: { value: light }, env: { value: null }, water: { value: null }, deltaEnvTexture: { value: null } }, vertexShader: v, fragmentShader: f, transparent: true });
         this._waterMaterial.blending = THREE.CustomBlending;
@@ -234,7 +234,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   // 마우스 드롭 이벤트
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  const targetgeometry = new THREE.PlaneGeometry(2, 2);
+  const targetgeometry = new THREE.PlaneGeometry(20, 20);
   const posAttr = targetgeometry.attributes.position;
   for (let i = 0; i < posAttr.count; i++) posAttr.setZ(i, waterPosition.z);
   posAttr.needsUpdate = true;
@@ -246,7 +246,12 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     mouse.y = -(e.clientY - rect.top) * 2 / height + 1;
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(targetmesh);
-    intersects.forEach(intersect => waterSimulation.addDrop(renderer, intersect.point.x, intersect.point.y, 0.03, 0.02));
+    const scaleFactor = 4 / 20; // 시뮬레이션 좌표(-2~2) 대비 실제 수면(20) 크기 비율
+    intersects.forEach(intersect => {
+      const sx = intersect.point.x * scaleFactor;
+      const sy = intersect.point.y * scaleFactor;
+      waterSimulation.addDrop(renderer, sx, sy, 0.03, 0.02);
+    });
   }
 
   const loaded = [waterSimulation.loaded, water.loaded, environmentMap.loaded, environment.loaded, caustics.loaded];
