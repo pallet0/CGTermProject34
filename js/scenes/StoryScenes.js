@@ -74,9 +74,9 @@ class StoryScene {
         if (this.sceneNumber === 1 || this.sceneNumber === 3 || this.sceneNumber === 4 || 
             this.sceneNumber === 8 || this.sceneNumber === 9) {
             // 용궁 scenes - 신비로운 파란 조명
-            const blueLight = new THREE.PointLight(0x4488ff, 0.5);
-            blueLight.position.set(0, 15, 0);
-            this.scene.add(blueLight);
+            // const blueLight = new THREE.PointLight(0x4488ff, 0.5);
+            // blueLight.position.set(0, 15, 0);
+            // this.scene.add(blueLight);
         } else if (this.sceneNumber === 2) {
             // 해안 scenes - 밝은 햇빛
             const sunLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
@@ -162,17 +162,17 @@ class StoryScene {
     setupCharacters() {
         // 캐릭터 GLB 파일 경로 맵
         const models = {
-            forest: '/glsl/forest.glb',
-            grassMoving: '/glsl/grass_moving.glb',
-            dragonKing: '/glsl/dragonking.glb',
-            dragonKingMoving: '/glsl/dragonking_moving.glb',
-            scienceLab: '/glsl/ScienceLab.glb',
-            turtle: '/glsl/turtle.glb',
-            turtleMoving: '/glsl/turtle_moving.glb',
-            rabbit: '/glsl/rabbit.glb',
-            rabbitMoving: '/glsl/rabbit_moving.glb',
-            rabbit2: '/glsl/rabbit2.glb',
-            rabbit2Moving: '/glsl/rabbit2_moving.glb'
+            forest: './glsl/forest.glb',
+            grassMoving: './glsl/grass_moving.glb',
+            dragonKing: './glsl/dragonking.glb',
+            dragonKingMoving: './glsl/dragonking_moving.glb',
+            scienceLab: './glsl/lab.glb',
+            turtle: './glsl/turtle.glb',
+            turtleMoving: './glsl/turtle_moving.glb',
+            rabbit: './glsl/rabbit.glb',
+            rabbitMoving: './glsl/rabbit_moving.glb',
+            rabbit2: './glsl/rabbit2.glb',
+            rabbit2Moving: './glsl/rabbit2_moving.glb'
         };
 
         // 용왕 로드
@@ -181,7 +181,7 @@ class StoryScene {
                 const model = gltf.scene;
                 model.rotation.x = Math.PI/2;
                 const positions = {
-                    1: [0.7,0,0.25],
+                    1: [1,1,0.25],
                     3: [0.7,0,0.25],
                     4: [0.7,0,0.25],
                     8: [0.7,0,0.25],

@@ -73,7 +73,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   ]);
   scene.background = skybox;
 
-  const ambient = new THREE.AmbientLight(0xffffff, 1.5);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.5);
   group.add(ambient);
 
   // 수조 벽 생성
@@ -292,16 +292,35 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     caustics.setDeltaEnvTexture(1 / environmentMap.size);
 
     // 초기 잔물결
-    for (let i = 0; i < 20; i++) {
-      waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, 0.08, (i & 1) ? 0.05 : -0.05);
+    for (let i = 0; i < 35; i++) {
+      waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, 0.12, (i & 1) ? 0.08 : -0.08);
     }
 
     // 마우스 이벤트 리스너 등록
     canvas.addEventListener('mousemove', onMouseMove);
   });
 
+  // 자동 물방울 효과를 위한 변수들
+  let lastAutoDropTime = 0;
+  const AUTO_DROP_INTERVAL = 50; // 50ms 마다 물방울 생성 (더 빈번하게)
+
+  function createRandomDrop() {
+    const x = Math.random() * 4 - 2;
+    const y = Math.random() * 4 - 2;
+    const radius = 0.03 + Math.random() * 0.05; // 더 큰 물방울
+    const strength = (Math.random() > 0.5 ? 1 : -1) * (0.04 + Math.random() * 0.03); // 더 강한 효과
+    waterSimulation.addDrop(renderer, x, y, radius, strength);
+  }
+
   function update() {
     if (!water.mesh) return;
+
+    // 자동 물방울 생성
+    const currentTime = Date.now();
+    if (currentTime - lastAutoDropTime > AUTO_DROP_INTERVAL) {
+      createRandomDrop();
+      lastAutoDropTime = currentTime;
+    }
 
     if (clock.getElapsedTime() > 0.032) {
       waterSimulation.stepSimulation(renderer);
