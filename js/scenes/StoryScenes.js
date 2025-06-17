@@ -35,7 +35,7 @@ class StoryScene {
         // Scene별 카메라 위치 설정
         const cameraPositions = {
             1: { pos: [-1.4, -1.6, 0.6], lookAt: [0, 0, 0] },      // S1(용궁) - 용왕님 원생부족
-            2: { pos: [-3.3, 1.4, 2.8], lookAt: [0, 0, 0] },     // S2(해안) - 거북이 토끼 조우
+            2: { pos: [1.5, -0.8, 1.5], lookAt: [-0.1, 0.2, 1.0] },     // S2(해안) - 거북이 토끼 조우
             3: { pos: [-1.4, -1.6, 0.65], lookAt: [0, 2, 0] },     // S3(용궁) - 토끼 인턴 시작
             4: { pos: [-1.4, -1.6, 0.6], lookAt: [0, 2, 0] },      // S4(용궁) - 용왕이 토끼에 석사 전환 권유, 토끼 친구 핑계
             5: { pos: [-9.4, -10.0, -10], lookAt: [-2, 2, 0] },     // S5(숲속) - 거북이가 토끼 에스코트해 땅으로 옴, 나무 위 동방에서 친구 데려오기
@@ -64,10 +64,12 @@ class StoryScene {
             this.scene.add(blueLight);
         } else if (this.sceneNumber === 2) {
             // 해안 scenes - 밝은 햇빛
-            const sunLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-            sunLight.position.set(50, 50, 50);
-            sunLight.castShadow = true;
-            this.scene.add(sunLight);
+            // const sunLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+            // sunLight.position.set(50, 50, 50);
+            // sunLight.castShadow = true;
+            // this.scene.add(sunLight);
+
+        
         } else {
             // 숲속 scenes - 초록빛 조명
             // const greenLight = new THREE.PointLight(0x88ff88, 0.3);
