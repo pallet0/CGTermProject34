@@ -188,7 +188,7 @@ class StoryScene {
                     9: [0.7,0,0.25]
                 };
                 model.position.set(...positions[this.sceneNumber]);
-                model.scale.set(0.1, 0.1, 0.1);
+                model.scale.set(0.15, 0.15, 0.15);
                 model.traverse(node => { if (node.isMesh) node.castShadow = true; });
 
                 const mixer = new THREE.AnimationMixer(model);
@@ -220,7 +220,7 @@ class StoryScene {
                     9: [-1, 1, 0.5]
                 };
                 model.position.set(...positions[this.sceneNumber]);
-                model.scale.set(0.12, 0.12, 0.12);
+                model.scale.set(0.2, 0.2, 0.2);
                 model.traverse(node => { if (node.isMesh) node.castShadow = true; });
 
                 const mixer = new THREE.AnimationMixer(model);

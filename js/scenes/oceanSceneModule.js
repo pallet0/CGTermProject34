@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
 export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
@@ -35,6 +36,33 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0 });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   group.add(floor);
+
+  // ---------------- 대학원 ----------------
+  const GLTFloader = new GLTFLoader();
+  GLTFloader.load('glsl/college.glb', (gltf) => {
+    const college = gltf.scene;
+
+    // 필요하면 스케일·위치 조정
+    college.rotation.x = Math.PI / 2;
+    college.rotation.y = -2;
+    college.scale.set(0.2, 0.2, 0.2);      // 전체 크기
+    college.position.set(4, 4, 1.3);   // 바닥 기준 위치
+
+    // 그림자 옵션
+    college.traverse(obj => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+
+    group.add(college);
+  }, undefined, (err) => {
+    console.error('college 로드 실패', err);
+  });
+
+
+
 
   // Skybox
   const cubetextureloader = new THREE.CubeTextureLoader();

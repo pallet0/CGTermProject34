@@ -30,15 +30,14 @@
             z-index: 10;
         }
         
-        #title-ui h1 {
-            font-size: 4rem;
+        #title-ui img {
+            transform: scale(1);
             margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
         #title-ui p {
-            font-size: 1.2rem;
-            animation: pulse 2s ease-in-out infinite;
+            font-size: 1.5rem;
+            animation: pulse 1.5s ease-in-out infinite;
         }
         
         /* 선택지 버튼 스타일 */
@@ -143,8 +142,8 @@
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.3; }
+            30%, 60% { opacity: 1; }
         }
     </style>
 </head>
@@ -155,7 +154,7 @@
     
     <!-- 타이틀 화면 UI -->
     <div id="title-ui">
-        <h1>별조교전</h1>
+        <img src="/glsl/title.png">
         <p>아래 다음 버튼을 클릭해주세요</p>
     </div>
     
