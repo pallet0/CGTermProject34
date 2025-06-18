@@ -70,12 +70,12 @@ export function createLabScene({ renderer, scene, camera, SCI }) {
   const fog = new THREE.FogExp2(0xFFFFFF, 0.05);
 
   // 부드러운 노란 AmbientLight 추가
-  const ambient = new THREE.AmbientLight(0x010101, 0.01);
+  const ambient = new THREE.AmbientLight(0xddddff, 0.4);
   labGroup.add(ambient);
 
-  const dirLight = new THREE.DirectionalLight(0x1111ff, 0.6);
-  dirLight.position.set(-2.1, 4.6, 2.1);
-  dirLight.target.position.set(0, 2, 0);
+  const dirLight = new THREE.DirectionalLight(0xeeeeee, 0.8);
+  dirLight.position.set(-1.3, 0, 4.9);
+  dirLight.target.position.set(-0.4, -1.1, 0.6);
   dirLight.castShadow = true;
   dirLight.shadow.mapSize.set(1024, 1024);
 
