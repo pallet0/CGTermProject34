@@ -578,6 +578,7 @@ class StoryScene {
         
         // Scene 1에서 툴팁 표시
         if (this.sceneNumber === 1) {
+            document.getElementById('dialogue-tip').textContent = 'Tip: 화면 아무 곳이나 눌러 대화를 진행하세요!';
             document.getElementById('dialogue-tip').style.display = 'block';
         }
         
