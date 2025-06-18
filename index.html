@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>별조교전</title>
     <style>
+        :root {
+            /* 커스텀 원형 커서 : 외부 PNG 사용 (glsl/cursor_circle.png) */
+            --circle-cursor: url("./glsl/circle.png") 16 16, auto;
+        }
+
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f0e6d2;
+
+            cursor: var(--circle-cursor);
         }
         
         #canvas-container {
@@ -53,19 +60,26 @@
         }
         
         .choice-button {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            background-color: #8b7355;
-            color: white;
+            padding: 1rem 2.3rem;
+            font-size: 1.3rem;
+            background-color: rgba(224,224,224,0.5); /* 연한 회색 & 투명 */
+            color: #000;
             border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            cursor: var(--circle-cursor);
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: inset 2px 2px 2px 0 rgba(255,255,255,.4),
+                        7px 7px 20px 0 rgba(0,0,0,.1),
+                        4px 4px 5px 0 rgba(0,0,0,.1);
         }
         
         .choice-button:hover {
-            background-color: #6b5745;
+            background-color: rgba(207,207,207,0.9);
             transform: scale(1.05);
+            box-shadow: inset 2px 2px 2px 0 rgba(255,255,255,.6),
+                        -7px -7px 20px 0 rgba(255,255,255,.4),
+                        7px 7px 20px 0 rgba(0,0,0,.2),
+                        4px 4px 5px 0 rgba(0,0,0,.1);
         }
         
         /* Next 버튼 */
@@ -80,7 +94,7 @@
             color: #000;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
+            cursor: var(--circle-cursor);
             display: none;
             transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
             z-index: 10;
@@ -164,7 +178,7 @@
             color: white;
             border: none;
             border-radius: 10px;
-            cursor: pointer;
+            cursor: var(--circle-cursor);
             transition: all 0.3s ease;
         }
         
@@ -314,7 +328,7 @@
             width: 100%;
             height: 100%;
             z-index: 4;
-            cursor: pointer;
+            cursor: var(--circle-cursor);
             display: none;
             pointer-events: none; /* 기본적으로 클릭 이벤트 통과 */
         }
@@ -323,9 +337,9 @@
             pointer-events: auto;
         }
 
-        /* 드래그 중일 때 커서 변경 */
+        /* 드래그 중일 때 커서 유지 */
         #dialogue-click-area.dragging {
-            cursor: grabbing;
+            cursor: var(--circle-cursor);
         }
 
         /* 스크롤바 스타일 */
