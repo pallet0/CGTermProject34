@@ -89,6 +89,7 @@
         
         .next-button:disabled {
             background-color: #999;
+            color: #999;
             cursor: not-allowed;
             opacity: 0.6;
         }
@@ -198,9 +199,9 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             height: 60%;
-            max-height: 500px;
+            max-height: 700px;
             overflow-y: auto;
             overflow-x: hidden;
             z-index: 5;
@@ -231,13 +232,12 @@
         
         /* 프로필 이미지 */
         .dialogue-profile {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            background-size: cover;
+            width: 55px;
+            height: 55px;
+            border-radius: 20%;
+            background-color: #dddddd00;
+            background-size: contain;
             background-position: center;
-            flex-shrink: 0;
         }
         
         /* 말풍선 */
@@ -283,6 +283,16 @@
         .dialogue-wrapper.right .dialogue-bubble::after {
             right: -8px;
             border-left-color: #fff3cd;
+            border-right: 0;
+        }
+
+        .dialogue-wrapper.middle .dialogue-bubble {
+            background-color: #ffffff93;
+            margin: 0 auto;
+        }
+        
+        .dialogue-wrapper.middle .dialogue-bubble::after {
+            border-left-color: #ffffff93;
             border-right: 0;
         }
         
@@ -347,8 +357,8 @@
     
     <!-- Scene 7 선택지 버튼 -->
     <div class="choice-buttons" id="choice-buttons">
-        <button class="choice-button" id="choice-a">토끼를 따라간다</button>
-        <button class="choice-button" id="choice-b">용궁에 남는다</button>
+        <button class="choice-button" id="choice-a">친구를 데려간다</button>
+        <button class="choice-button" id="choice-b">동아리방에 남는다</button>
     </div>
     
     <!-- Next 버튼 -->
@@ -356,15 +366,15 @@
     
     <!-- 엔딩 카드 A -->
     <div class="ending-card" id="ending-a">
-        <h2>해피 엔딩</h2>
-        <p>토끼의 지혜로 모두가 행복해졌습니다.</p>
+        <h2>엔딩 A</h2>
+        <p>두 토끼는 학계에 이름을 날리며 훌륭한 공학도로 성장할 수 있었습니다.</p>
         <button class="restart-button" onclick="restartStory()">다시하기</button>
     </div>
     
     <!-- 엔딩 카드 B -->
     <div class="ending-card" id="ending-b">
-        <h2>또 다른 엔딩</h2>
-        <p>거북이는 용궁에서 평화롭게 살았습니다.</p>
+        <h2>엔딩 B</h2>
+        <p>토끼의 지혜로 토끼는 무사히 학사 졸업을 할 수 있었습니다.</p>
         <button class="restart-button" onclick="restartStory()">다시하기</button>
     </div>
     
