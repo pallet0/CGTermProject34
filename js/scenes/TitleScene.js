@@ -13,7 +13,7 @@ class TitleScene {
             0.1,
             1000
         );
-        this.camera.position.set(0.1, 0.0, 0.9);
+        this.camera.position.set(0.4, 0.3, 0.8);
         this.camera.lookAt(0, 0, 0);
 
         console.log("FOREST LOADING");
@@ -47,12 +47,26 @@ class TitleScene {
         forestGroup.position.set(0, 0, -15);
 
         this.scene.add(forestGroup);
-        // 배경을 숲 하늘로 바꾸고 싶으면 아래 한 줄도 추가해주냥!
-        this.scene.background = skybox;
+        // 배경을 숲 하늘로 바꾸고 싶으면 아래 한 줄도 추가
+        const canvas = document.createElement('canvas');
+        canvas.width = 16;
+        canvas.height = 256;
+        const ctx = canvas.getContext('2d');
+        // 위(0)에서 남색, 아래(1)에서 하늘색으로 그라디언트
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grad.addColorStop(0.3, '#0077b6'); // navy
+        grad.addColorStop(0, '#caf0f8'); // skyblue
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // THREE.CanvasTexture로 변환해서 배경에 설정
+        const bgTexture = new THREE.CanvasTexture(canvas);
+        bgTexture.magFilter = THREE.LinearFilter;
+        bgTexture.minFilter = THREE.LinearFilter;
+        this.scene.background = bgTexture;
         
         // 떠다니는 구름 효과 (몽글몽글한 분위기)
         this.clouds = [];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             const cloudGeometry = new THREE.SphereGeometry(
                 Math.random() * 2 + 1,
                 8,
@@ -65,11 +79,12 @@ class TitleScene {
             });
             const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
             cloud.position.set(
-                Math.random() * 20 - 10,
-                Math.random() * 5 + 3,
-                Math.random() * 10
+                Math.random() * 40+10,
+                Math.random() * 5+ 5,
+                Math.random() * 10 - 15
             );
             cloud.scale.x = 2;
+            forestGroup.rotation.x = -Math.PI/2;
             this.clouds.push(cloud);
             this.scene.add(cloud);
         }
