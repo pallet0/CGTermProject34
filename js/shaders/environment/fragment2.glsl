@@ -9,7 +9,8 @@ const float bias = 0.001;
 
 //바다색 영향
 const vec3 underwaterColor = vec3(0.3, 0.7, 0.9);
-const float underwaterInfluence = 0.15;
+// 수중 색상 영향 비율(낮출수록 원색 유지)
+const float underwaterInfluence = 0.03  ;
 
 const vec2 resolution = vec2(1024.);
 
@@ -27,7 +28,7 @@ float blur(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 
 void main() {
   // Set the frag color
-  float computedLightIntensity = 0.5;
+  float computedLightIntensity = 0.9;
 
   computedLightIntensity += 0.2 * lightIntensity;
 
