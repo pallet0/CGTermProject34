@@ -13,7 +13,7 @@ class TitleScene {
             0.1,
             1000
         );
-        this.camera.position.set(0.4, 0.3, 0.8);
+        this.camera.position.set(-0.1, 0.0, 2.4);
         this.camera.lookAt(0, 0, 0);
 
         console.log("FOREST LOADING");
@@ -34,6 +34,19 @@ class TitleScene {
         const directionalLight = new THREE.DirectionalLight(0xffeecc, 0.8);
         directionalLight.position.set(5, 10, 5);
         directionalLight.castShadow = true;
+
+        // 그림자 해상도 향상
+        directionalLight.shadow.mapSize.set(4096, 4096);
+
+        // 그림자 투영 카메라 범위 확대 (더 넓은 영역에 그림자 투영)
+        const d = 50; // 값이 클수록 범위 넓음
+        directionalLight.shadow.camera.left = -d;
+        directionalLight.shadow.camera.right = d;
+        directionalLight.shadow.camera.top = d;
+        directionalLight.shadow.camera.bottom = -d;
+        directionalLight.shadow.camera.near = 0.5;
+        directionalLight.shadow.camera.far = 200;
+
         this.scene.add(directionalLight);
 
         directionalLight.shadow.mapSize.set(1024, 1024);
@@ -68,7 +81,7 @@ class TitleScene {
         
         // 떠다니는 구름 효과 (몽글몽글한 분위기)
         this.clouds = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 8; i++) {
             const cloudGeometry = new THREE.SphereGeometry(
                 Math.random() * 2 + 1,
                 8,
@@ -81,9 +94,9 @@ class TitleScene {
             });
             const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
             cloud.position.set(
-                Math.random() * 40+10,
-                Math.random() * 5+ 5,
-                Math.random() * 10 - 15
+                Math.random() * 20 - 10,
+                Math.random() * 5 + 5,
+                Math.random() * 10-15
             );
             cloud.scale.x = 2;
             forestGroup.rotation.x = -Math.PI/2;
