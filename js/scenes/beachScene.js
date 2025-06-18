@@ -310,7 +310,12 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
     mouse.y = -(e.clientY - rect.top) * 2 / height + 1;
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObject(targetmesh);
-    intersects.forEach(intersect => waterSimulation.addDrop(renderer, intersect.point.x, intersect.point.y, 0.03, 0.02));
+    const scaleFactor = 1 / group.scale.x; // compensate for group scaling (2)
+    intersects.forEach(intersect => {
+      const sx = intersect.point.x * scaleFactor;
+      const sy = intersect.point.y * scaleFactor;
+      waterSimulation.addDrop(renderer, sx, sy, 0.03, 0.02);
+    });
   }
 
   canvas.addEventListener('mousemove', onMouseMove);
@@ -326,9 +331,13 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
     caustics.setDeltaEnvTexture(1 / environmentMap.size);
 
     // 초기 잔물결
-    for (let i = 0; i < 5; i++) {
-      waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, 0.03, (i & 1) ? 0.02 : -0.02);
+    for (let i = 0; i < 40; i++) {
+      const radius = 0.04 + Math.random() * 0.05; // 0.04~0.09
+      const strength = (Math.random() > 0.5 ? 1 : -1) * (0.03 + Math.random() * 0.04); // ±0.03~0.07
+      waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, radius, strength);
     }
+
+
   });
 
   // -------------------- per-frame 업데이트 --------------------

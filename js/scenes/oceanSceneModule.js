@@ -51,8 +51,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   group.add(sun);
 
   // 그림자 디버그용 카메라 헬퍼 추가
-  const helper = new THREE.CameraHelper(sun.shadow.camera);
-  group.add(helper);
+  // const helper = new THREE.CameraHelper(sun.shadow.camera);
+  // group.add(helper);
 
   // 지면 (바닥)
   const floorGeometry = new THREE.PlaneGeometry(20, 20, 1, 1);
