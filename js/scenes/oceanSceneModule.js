@@ -1,5 +1,7 @@
 import * as THREE from 'three';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { mergeBufferGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 
 export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
@@ -145,6 +147,67 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     }
   }, undefined, (err) => {
     console.error('coralreef2 로드 실패', err);
+  });
+
+  //돌 추가
+  let rock1;
+  let rock2;
+  const rockLoaded = new Promise((resolve) => {
+    const objLoader = new OBJLoader();
+    objLoader.load('js/assets/rock.obj', (rockGeometry) => {
+      rockGeometry = rockGeometry.children[0].geometry;
+      rockGeometry.computeVertexNormals();
+
+      rock1 = new THREE.BufferGeometry().copy(rockGeometry);
+      rock1.scale(0.05, 0.05, 0.02);
+      rock1.translate(0.2, 0., 0.1);
+
+      rock2 = new THREE.BufferGeometry().copy(rockGeometry);
+      rock2.scale(0.05, 0.05, 0.05);
+      rock2.translate(-0.5, 0.5, 0.2);
+      rock2.rotateZ(Math.PI / 2.);
+
+      resolve();
+    });
+  });
+
+  let plant;
+  const plantLoaded = new Promise((resolve) => {
+    const objLoader = new OBJLoader();
+    objLoader.load('js/assets/plant.obj', (plantGeometry) => {
+      plantGeometry = plantGeometry.children[0].geometry;
+      plantGeometry.computeVertexNormals();
+
+      plant = plantGeometry;
+      plant.rotateX(Math.PI / 6.);
+      plant.scale(0.03, 0.03, 0.03);
+      plant.translate(-0.5, 0.5, 0.);
+
+      resolve();
+    });
+  });
+
+  let ocean_bottom;
+  const ocean_bottomLoaded = new Promise((resolve) => {
+    const objLoader = new OBJLoader();
+    objLoader.load('js/assets/ocean_bottom.obj', (obj) => {
+      // 모든 geometry를 하나로 합치기
+      const geometries = [];
+      obj.traverse((child) => {
+        if (child.isMesh) {
+          geometries.push(child.geometry);
+        }
+      });
+      
+      // geometry들을 하나로 병합
+      ocean_bottom = mergeBufferGeometries(geometries);
+      ocean_bottom.computeVertexNormals();
+      ocean_bottom.rotateX(Math.PI / 2.);
+      ocean_bottom.scale(0.3, 0.3, 0.3);
+      ocean_bottom.translate(0, 0, -0.4);
+
+      resolve();
+    });
   });
 
   // Skybox
@@ -365,10 +428,11 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     });
   }
 
-  const loaded = [waterSimulation.loaded, water.loaded, environmentMap.loaded, environment.loaded, caustics.loaded];
+  //load한거 넣기
+  const loaded = [waterSimulation.loaded, water.loaded, environmentMap.loaded, environment.loaded, caustics.loaded, rockLoaded, plantLoaded, ocean_bottomLoaded];
 
   Promise.all(loaded).then(() => {
-    const envGeometries = [floorGeometry];
+    const envGeometries = [rock1, rock2, plant, ocean_bottom, floorGeometry];  
     environmentMap.setGeometries(envGeometries);
     environment.setGeometries(envGeometries);
     environment.addTo(group);
