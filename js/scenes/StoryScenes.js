@@ -460,7 +460,7 @@ class StoryScene {
             9: [
                 { speaker: 'turtle', text: '용왕님… 그게…', profile: './glsl/propic_turtleR.png', position: 'right' },
                 { speaker: 'dragonKing', text: '…설마 이번에도…', profile: './glsl/propic_dragonkingL.png', position: 'left' },
-                { speaker: 'turtle', text: '토끼 학생이… 동아리 방에나 나오지 않습니다.', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'turtle', text: '토끼 학생이… 동아리 방에서 나오질 않습니다.', profile: './glsl/propic_turtleR.png', position: 'right' },
                 { speaker: 'turtle', text: '그… 혹시 저도 이번에 휴학ㅇ…', profile: './glsl/propic_turtleR.png', position: 'right' },
                 { speaker: 'dragonKing', text: '그럼… 다음 토끼에겐 랩을 \'게임 그래픽 연구실\'이라고 소개하게.', profile: './glsl/propic_dragonkingL.png', position: 'left' },
                 { speaker: 'dragonKing', text: '토끼들이 특히나 좋아하더군.', profile: './glsl/propic_dragonkingL.png', position: 'left' }
@@ -546,12 +546,12 @@ class StoryScene {
             // Scene 8: 엔딩 A 표시
             setTimeout(() => {
                 document.getElementById('ending-a').style.display = 'block';
-            }, 500);
+            }, 1500);
         } else if (this.sceneNumber === 9) {
             // Scene 9: 엔딩 B 표시
             setTimeout(() => {
                 document.getElementById('ending-b').style.display = 'block';
-            }, 500);
+            }, 1500);
         } 
         
         if (![5, 8, 9].includes(this.sceneNumber)) {
