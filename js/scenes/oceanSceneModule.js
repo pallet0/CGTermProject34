@@ -59,12 +59,13 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   const floorMaterial = new THREE.MeshStandardMaterial({ 
     color: 0x00aaff, 
     transparent: true, 
-    opacity: 0.2,
+    opacity: 1.0,
     roughness: 0.8,
     metalness: 0.2
   });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   floor.receiveShadow = true;
+  floor.position.z = -0.05;   // 5㎝ 정도 아래
   group.add(floor);
 
   // ---------------- 땅바닥 ----------------
@@ -149,17 +150,20 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
           positionMatrix.makeTranslation(pos[0], pos[1], pos[2]);
           geo.applyMatrix4(positionMatrix);
           
-          // 색상 부여
-          const reefColor1 = new THREE.Color(0x94c46a);
-          const colorArr1 = new Float32Array(geo.attributes.position.count * 3);
-          for (let i = 0; i < geo.attributes.position.count; i++) {
-            colorArr1[i * 3] = reefColor1.r;
-            colorArr1[i * 3 + 1] = reefColor1.g;
-            colorArr1[i * 3 + 2] = reefColor1.b;
-          }
-          geo.setAttribute('color', new THREE.BufferAttribute(colorArr1, 3));
-          
-          coralreef1Geometries.push(geo);
+          // 색상 부여: 산호초1 분홍/연녹  
+           const reefColor1 = new THREE.Color(0x94c46a);
+           const colorArr1 = new Float32Array(geo.attributes.position.count * 3);
+           for (let i = 0; i < geo.attributes.position.count; i++) {
+             colorArr1[i * 3] = reefColor1.r;
+             colorArr1[i * 3 + 1] = reefColor1.g;
+             colorArr1[i * 3 + 2] = reefColor1.b;
+           }
+           geo.setAttribute('color', new THREE.BufferAttribute(colorArr1, 3));
+
+           // 산호초 표시 플래그
+           geo.userData.isReef = true;
+ 
+           coralreef1Geometries.push(geo);
         }
       });
     }
@@ -212,6 +216,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
           }
           geo.setAttribute('color', new THREE.BufferAttribute(colorArr2, 3));
           
+          geo.userData.isReef = true;
+ 
           coralreef2Geometries.push(geo);
         }
       });
@@ -220,44 +226,6 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     console.error('coralreef2 로드 실패', err);
   });
 
-
-
-
-  let ocean_bottom;
-  const ocean_bottomLoaded = new Promise((resolve) => {
-    const objLoader = new OBJLoader();
-    objLoader.load('js/assets/ocean_bottom.obj', (obj) => {
-      // 모든 geometry를 하나로 합치기
-      const geometries = [];
-      obj.traverse((child) => {
-        if (child.isMesh) {
-          geometries.push(child.geometry);
-        }
-      });
-      
-      // geometry들을 하나로 병합
-      ocean_bottom = mergeGeometries(geometries);
-      ocean_bottom.computeVertexNormals();
-      ocean_bottom.rotateX(Math.PI / 2.);
-      ocean_bottom.scale(0.3, 0.3, 0.3);
-      ocean_bottom.translate(0, 0, -0.4);
-
-      // 그림자를 위한 추가 메쉬 생성
-      const shadowMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x808080,
-        transparent: true,
-        opacity: 0.3,
-        roughness: 0.8,
-        metalness: 0.2
-      });
-      const shadowMesh = new THREE.Mesh(ocean_bottom.clone(), shadowMaterial);
-      shadowMesh.receiveShadow = true;
-      group.add(shadowMesh);
-
-
-      resolve();
-    });
-  });
 
   // Skybox
   const cubetextureloader = new THREE.CubeTextureLoader();
@@ -436,14 +404,69 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
 
   class Environment {
     constructor() {
-      const p = [loadFileLocal('js/shaders/environment/vertex2.glsl'), loadFileLocal('js/shaders/environment/fragment2.glsl')];
+      const baseProm = [
+        loadFileLocal('js/shaders/environment/vertex.glsl'),
+        loadFileLocal('js/shaders/environment/fragment.glsl')
+      ];
+      const reefProm = [
+        loadFileLocal('js/shaders/environment/vertex2.glsl'),
+        loadFileLocal('js/shaders/environment/fragment2.glsl')
+      ];
       this._meshes = [];
-      this.loaded = Promise.all(p).then(([v, f]) => {
-        this._material = new THREE.ShaderMaterial({ uniforms: { light: { value: light }, caustics: { value: null }, lightProjectionMatrix: { value: lightCamera.projectionMatrix }, lightViewMatrix: { value: lightCamera.matrixWorldInverse } }, vertexShader: v, fragmentShader: f });
+      this.loaded = Promise.all([...baseProm, ...reefProm]).then(([vb, fb, vr, fr]) => {
+        this._baseMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            light: { value: light },
+            caustics: { value: null },
+            lightProjectionMatrix: { value: lightCamera.projectionMatrix },
+            lightViewMatrix: { value: lightCamera.matrixWorldInverse }
+          },
+          vertexShader: vb,
+          fragmentShader: fb,
+          transparent: true,
+          opacity: 0.9
+        });
+
+        this._reefMaterial = new THREE.ShaderMaterial({
+          uniforms: {
+            light: { value: light },
+            caustics: { value: null },
+            lightProjectionMatrix: { value: lightCamera.projectionMatrix },
+            lightViewMatrix: { value: lightCamera.matrixWorldInverse }
+          },
+          vertexShader: vr,
+          fragmentShader: fr,
+          transparent: true,
+          opacity: 0.9
+        });
       });
     }
-    setGeometries(geoms) { this._meshes = geoms.map(g => new THREE.Mesh(g, this._material)); }
-    updateCaustics(tex) { this._material.uniforms['caustics'].value = tex; }
+
+    _ensureColorAttr(g) {
+      if (!g.attributes.color) {
+        const colors = new Float32Array(g.attributes.position.count * 3);
+        for (let i = 0; i < g.attributes.position.count; i++) {
+          
+          colors.set([1, 1, 1], i * 3);
+          
+        }
+        g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      }
+    }
+
+    setGeometries(geoms) {
+      this._meshes = geoms.map(g => {
+        this._ensureColorAttr(g);
+        const mat = g.userData.isReef ? this._reefMaterial : this._baseMaterial;
+        return new THREE.Mesh(g, mat);
+      });
+    }
+
+    updateCaustics(tex) {
+      if (this._baseMaterial) this._baseMaterial.uniforms['caustics'].value = tex;
+      if (this._reefMaterial) this._reefMaterial.uniforms['caustics'].value = tex;
+    }
+
     addTo(g) { this._meshes.forEach(m => g.add(m)); }
   }
 
@@ -477,12 +500,11 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   }
 
   //load한거 넣기
-  const loaded = [waterSimulation.loaded, water.loaded, environmentMap.loaded, environment.loaded, caustics.loaded, ocean_bottomLoaded];
+  const loaded = [waterSimulation.loaded, water.loaded, environmentMap.loaded, environment.loaded, caustics.loaded];
 
   Promise.all(loaded).then(() => {
     const envGeometries = [
-      ocean_bottom, 
-      
+     
       ...coralreef1Geometries,
       ...coralreef2Geometries,
       floorGeometry

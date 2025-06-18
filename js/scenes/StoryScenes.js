@@ -399,71 +399,71 @@ class StoryScene {
         // Scene별 대화 데이터 - position 속성 추가 ('left' 또는 'right')
         const dialogueData = {
             1: [
-                { speaker: 'none', text: '어느 날, 공학원 건물 앞', profile: '/glsl/propic_none.png', position: 'middle' },
-                { speaker: 'turtle', text: '용왕님, 인턴이 또 학사 졸업을 해버렸습니다…', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'turtle', text: '분명 석사 전환을 희망한다 해서 뽑았는데…', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'dragonKing', text: '요즘 학부생들은 의지가 박약하구만…', profile: '/glsl/propic_dragonkingL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '별 조교, 쓸만한 인턴 한 마리만 데려오게.', profile: '/glsl/propic_dragonkingL.png', position: 'left' },
-                { speaker: 'turtle', text: '이번엔… 꼭 살아남을 녀석으로 골라보겠습니다.', profile: '/glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'none', text: '어느 날, 공학원 건물 앞', profile: './glsl/propic_none.png', position: 'middle' },
+                { speaker: 'turtle', text: '용왕님, 인턴이 또 학사 졸업을 해버렸습니다…', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'turtle', text: '분명 석사 전환을 희망한다 해서 뽑았는데…', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'dragonKing', text: '요즘 학부생들은 의지가 박약하구만…', profile: './glsl/propic_dragonkingL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '별 조교, 쓸만한 인턴 한 마리만 데려오게.', profile: './glsl/propic_dragonkingL.png', position: 'left' },
+                { speaker: 'turtle', text: '이번엔… 꼭 살아남을 녀석으로 골라보겠습니다.', profile: './glsl/propic_turtleR.png', position: 'right' },
             ],
             2: [
-                { speaker: 'turtle', text: '거기, 지나가는 똑똑한 토끼분.', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'rabbit', text: '네? 저, 저요?', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'turtle', text: '이번 학기 기말과제, 정말 인상깊게 봤습니다.', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'turtle', text: '한 번 랩실에서 보다 수준있는 연구와 경력을 쌓지 않겠어요?', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'rabbit', text: '어? 음… 잠깐만 해도 괜찮은 거죠?', profile: '/glsl/propic_rabbitL.png', position: 'left' }
+                { speaker: 'turtle', text: '거기, 지나가는 똑똑한 토끼분.', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'rabbit', text: '네? 저, 저요?', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'turtle', text: '이번 학기 기말과제, 정말 인상깊게 봤습니다.', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'turtle', text: '한 번 랩실에서 보다 수준있는 연구와 경력을 쌓지 않겠어요?', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'rabbit', text: '어? 음… 잠깐만 해도 괜찮은 거죠?', profile: './glsl/propic_rabbitL.png', position: 'left' }
             ],
             3: [
-                { speaker: 'none', text: '몇 달 뒤, 연구실', profile: '/glsl/propic_none.png', position: 'middle' },
-                { speaker: 'dragonKing', text: '별 조교, 이번엔 좀 어떤가?', profile: '/glsl/propic_dragonkingR.png', position: 'right' },
-                { speaker: 'turtle', text: '아, 용왕님. 그게… 이걸 한 번 읽어보시겠습니까?', profile: '/glsl/propic_turtleL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '이건…!', profile: '/glsl/propic_dragonkingR.png', position: 'right' },
-                { speaker: 'turtle', text: '인턴 한 달 동안 저 토끼가 직접 연구해온 거라고 합니다.', profile: '/glsl/propic_turtleL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '그게 정말인가? 허, 참… 한 번 따로 이야기를 해봐야곘군.', profile: '/glsl/propic_dragonkingR.png', position: 'right' },
+                { speaker: 'none', text: '몇 달 뒤, 연구실', profile: './glsl/propic_none.png', position: 'middle' },
+                { speaker: 'dragonKing', text: '별 조교, 이번엔 좀 어떤가?', profile: './glsl/propic_dragonkingR.png', position: 'right' },
+                { speaker: 'turtle', text: '아, 용왕님. 그게… 이걸 한 번 읽어보시겠습니까?', profile: './glsl/propic_turtleL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '이건…!', profile: './glsl/propic_dragonkingR.png', position: 'right' },
+                { speaker: 'turtle', text: '인턴 한 달 동안 저 토끼가 직접 연구해온 거라고 합니다.', profile: './glsl/propic_turtleL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '그게 정말인가? 허, 참… 한 번 따로 이야기를 해봐야곘군.', profile: './glsl/propic_dragonkingR.png', position: 'right' },
             ],
             4: [
-                { speaker: 'rabbit', text: '교수님, 어떤 일로 부르셨나요?', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '토끼 학생, 지난 몇 달 간 지켜봤지만 토끼 분같이 성실한 인턴은 처음이에요.', profile: '/glsl/propic_dragonkingR.png', position: 'right' },
-                { speaker: 'dragonKing', text: '이번 기회에 석사 과정을 밟아보는 건 어떤가요?.', profile: '/glsl/propic_dragonkingR.png', position: 'right' },
-                { speaker: 'rabbit', text: '아, 그게… 어…', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'rabbit', text: '제가 가입한 동아리에 저보다도 유능한 학부생이 있습니다.', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'rabbit', text: '지금 동아리방에 있을텐데, 함께 석사를 하자고 하면 흔쾌히 수락할 것입니다.', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '그럼, 그 친구에게도 한 번 물어보고 오세요!', profile: '/glsl/propic_dragonkingR.png', position: 'right' }
+                { speaker: 'rabbit', text: '교수님, 어떤 일로 부르셨나요?', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '토끼 학생, 지난 몇 달 간 지켜봤지만 토끼 분같이 성실한 인턴은 처음이에요.', profile: './glsl/propic_dragonkingR.png', position: 'right' },
+                { speaker: 'dragonKing', text: '이번 기회에 석사 과정을 밟아보는 건 어떤가요?.', profile: './glsl/propic_dragonkingR.png', position: 'right' },
+                { speaker: 'rabbit', text: '아, 그게… 어…', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'rabbit', text: '제가 가입한 동아리에 저보다도 유능한 학부생이 있습니다.', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'rabbit', text: '지금 동아리방에 있을텐데, 함께 석사를 하자고 하면 흔쾌히 수락할 것입니다.', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '그럼, 그 친구에게도 한 번 물어보고 오세요!', profile: './glsl/propic_dragonkingR.png', position: 'right' }
             ],
             5: [
-                { speaker: 'rabbit', text: '이 학생회관 나무를 타고 올라가면 저희 동아리방이에요.', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'rabbit', text: '근데 동아리가 원칙상 대학원생 출입 금지라… 혼자 가서 데려올게요.', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'turtle', text: '알겠습니다. 여기서 기다릴테니 잘 부탁드립니다.', profile: '/glsl/propic_turtleR.png', position: 'right' }
+                { speaker: 'rabbit', text: '이 학생회관 나무를 타고 올라가면 저희 동아리방이에요.', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'rabbit', text: '근데 동아리가 원칙상 대학원생 출입 금지라… 혼자 가서 데려올게요.', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'turtle', text: '알겠습니다. 여기서 기다릴테니 잘 부탁드립니다.', profile: './glsl/propic_turtleR.png', position: 'right' }
             ],
             6: [
-                { speaker: 'rabbit2', text: '그, 파랑토끼야… 여기가 정말 학사 채용 설명회하는 곳 맞아?', profile: '/glsl/propic_rabbit2L.png', position: 'left' },
-                { speaker: 'rabbit', text: '들어올 땐 마음대로지만 나갈 땐 아니란다.', profile: '/glsl/propic_rabbitR.png', position: 'right' },
-                { speaker: 'rabbit2', text: '뭐?! 이, 이게 무슨 소리야! 말도 안된다고…!', profile: '/glsl/propic_rabbit2L.png', position: 'left' },
-                { speaker: 'turtle', text: '두 분 모두 환영합니다!', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'rabbit', text: '이런 귀한 경험의 기회를 나만 누릴 순 없지!', profile: '/glsl/propic_rabbitR.png', position: 'right' },
+                { speaker: 'rabbit2', text: '그, 파랑토끼야… 여기가 정말 학사 채용 설명회하는 곳 맞아?', profile: './glsl/propic_rabbit2L.png', position: 'left' },
+                { speaker: 'rabbit', text: '들어올 땐 마음대로지만 나갈 땐 아니란다.', profile: './glsl/propic_rabbitR.png', position: 'right' },
+                { speaker: 'rabbit2', text: '뭐?! 이, 이게 무슨 소리야! 말도 안된다고…!', profile: './glsl/propic_rabbit2L.png', position: 'left' },
+                { speaker: 'turtle', text: '두 분 모두 환영합니다!', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'rabbit', text: '이런 귀한 경험의 기회를 나만 누릴 순 없지!', profile: './glsl/propic_rabbitR.png', position: 'right' },
             ],
             7: [
-                { speaker: 'turtle', text: '토끼 학생, 도대체 언제 내려오시는 건가요?!', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'rabbit', text: '조교님은 그걸 믿으셨어요?', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'turtle', text: '네?', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'rabbit', text: '그렇게 똑똑한 학생이 있었다면 저보다 더 눈에 띄었겠죠.', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'turtle', text: '그런…! 토끼 학생! 제발 다시 한 번만 생각을…!', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'rabbit', text: '이만 포기하고 돌아가요. 저 오늘 동아리방에서 절대 안 나갈 거니까.', profile: '/glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'turtle', text: '토끼 학생, 도대체 언제 내려오시는 건가요?!', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'rabbit', text: '조교님은 그걸 믿으셨어요?', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'turtle', text: '네?', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'rabbit', text: '그렇게 똑똑한 학생이 있었다면 저보다 더 눈에 띄었겠죠.', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'turtle', text: '그런…! 토끼 학생! 제발 다시 한 번만 생각을…!', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'rabbit', text: '이만 포기하고 돌아가요. 저 오늘 동아리방에서 절대 안 나갈 거니까.', profile: './glsl/propic_rabbitL.png', position: 'left' },
             ],
             8: [
-                { speaker: 'none', text: '수 개월 후…', profile: '/glsl/propic_none.png', position: 'middle' },
-                { speaker: 'rabbit2', text: '파랑토끼야, 정말… 정말 고마워. 그 때 너가 아니었다면…', profile: '/glsl/propic_rabbit2R.png', position: 'right' },
-                { speaker: 'rabbit', text: '정신 차려보니 SCI 등재… 단톡방도 조용하고, 내가 제1저자라니…', profile: '/glsl/propic_rabbitL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '수고했어요. 두 분은 우리 랩실의 전설로 남을 겁니다.', profile: '/glsl/propic_dragonkingR.png', position: 'right' },
-                { speaker: 'turtle', text: '훌쩍… 처음이야… 우리 랩실에서 이런 업적을…!', profile: '/glsl/propic_turtleL.png', position: 'left' }
+                { speaker: 'none', text: '수 개월 후…', profile: './glsl/propic_none.png', position: 'middle' },
+                { speaker: 'rabbit2', text: '파랑토끼야, 정말… 정말 고마워. 그 때 너가 아니었다면…', profile: './glsl/propic_rabbit2R.png', position: 'right' },
+                { speaker: 'rabbit', text: '정신 차려보니 SCI 등재… 단톡방도 조용하고, 내가 제1저자라니…', profile: './glsl/propic_rabbitL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '수고했어요. 두 분은 우리 랩실의 전설로 남을 겁니다.', profile: './glsl/propic_dragonkingR.png', position: 'right' },
+                { speaker: 'turtle', text: '훌쩍… 처음이야… 우리 랩실에서 이런 업적을…!', profile: './glsl/propic_turtleL.png', position: 'left' }
             ],
             9: [
-                { speaker: 'turtle', text: '용왕님… 그게…', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'dragonKing', text: '…설마 이번에도…', profile: '/glsl/propic_dragonkingL.png', position: 'left' },
-                { speaker: 'turtle', text: '토끼 학생이… 동아리 방에나 나오지 않습니다.', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'turtle', text: '그… 혹시 저도 이번에 휴학ㅇ…', profile: '/glsl/propic_turtleR.png', position: 'right' },
-                { speaker: 'dragonKing', text: '그럼… 다음 토끼에겐 랩을 \'게임 그래픽 연구실\'이라고 소개하게.', profile: '/glsl/propic_dragonkingL.png', position: 'left' },
-                { speaker: 'dragonKing', text: '토끼들이 특히나 좋아하더군.', profile: '/glsl/propic_dragonkingL.png', position: 'left' }
+                { speaker: 'turtle', text: '용왕님… 그게…', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'dragonKing', text: '…설마 이번에도…', profile: './glsl/propic_dragonkingL.png', position: 'left' },
+                { speaker: 'turtle', text: '토끼 학생이… 동아리 방에나 나오지 않습니다.', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'turtle', text: '그… 혹시 저도 이번에 휴학ㅇ…', profile: './glsl/propic_turtleR.png', position: 'right' },
+                { speaker: 'dragonKing', text: '그럼… 다음 토끼에겐 랩을 \'게임 그래픽 연구실\'이라고 소개하게.', profile: './glsl/propic_dragonkingL.png', position: 'left' },
+                { speaker: 'dragonKing', text: '토끼들이 특히나 좋아하더군.', profile: './glsl/propic_dragonkingL.png', position: 'left' }
             ]
         };
         
