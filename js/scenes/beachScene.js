@@ -215,7 +215,14 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
       this._meshes = [];
       this.loaded = Promise.all(shaderProm).then(([v, f]) => { this._material = new THREE.ShaderMaterial({ vertexShader: v, fragmentShader: f }); });
     }
-    setGeometries(geoms) { this._meshes = geoms.map(g => new THREE.Mesh(g, this._material)); }
+    setGeometries(geoms) {
+      this._meshes = geoms.map(g => {
+        const mesh = new THREE.Mesh(g, this._material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        return mesh;
+      });
+    }
     render(renderer) {
       const old = renderer.getRenderTarget();
       renderer.setRenderTarget(this.target);
@@ -265,7 +272,14 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
         this._material = new THREE.ShaderMaterial({ uniforms: { light: { value: light }, caustics: { value: null }, lightProjectionMatrix: { value: lightCamera.projectionMatrix }, lightViewMatrix: { value: lightCamera.matrixWorldInverse } }, vertexShader: v, fragmentShader: f });
       });
     }
-    setGeometries(geoms) { this._meshes = geoms.map(g => new THREE.Mesh(g, this._material)); }
+    setGeometries(geoms) {
+      this._meshes = geoms.map(g => {
+        const mesh = new THREE.Mesh(g, this._material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        return mesh;
+      });
+    }
     updateCaustics(tex) { this._material.uniforms['caustics'].value = tex; }
     addTo(g) { this._meshes.forEach(m => g.add(m)); }
   }

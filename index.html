@@ -76,16 +76,26 @@
             transform: translateX(-50%); /* 중앙 정렬 */
             padding: 1rem 2.3rem;
             font-size: 1.3rem;
-            background-color: #5c8ab3;
-            color: white;
+            background-color: rgba(224,224,224,0.5); /* 연한 회색 & 투명 */
+            color: #000;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             display: none;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
             z-index: 10;
+            box-shadow: inset 2px 2px 2px 0 rgba(255,255,255,.4),
+                        7px 7px 20px 0 rgba(0,0,0,.1),
+                        4px 4px 5px 0 rgba(0,0,0,.1);
         }
-        .next-button:hover { background-color: #4a769b; transform: scale(1.05); }
+        .next-button:hover { 
+            background-color: rgba(207,207,207,0.9); /* 진한 회색 & 투명 */
+            transform: scale(1.05);
+            box-shadow: inset 2px 2px 2px 0 rgba(255,255,255,.6),
+                        -7px -7px 20px 0 rgba(255,255,255,.4),
+                        7px 7px 20px 0 rgba(0,0,0,.2),
+                        4px 4px 5px 0 rgba(0,0,0,.1);
+        }
         
         .next-button:disabled {
             background-color: #999;
@@ -99,8 +109,8 @@
             transform: translateX(-50%); /* hover시에도 중앙 유지 */
         }
         
-        .next-button:not(:disabled):hover { 
-            background-color: #4a769b; 
+        .next-button:not(:disabled):hover {     
+            background-color: rgba(207,207,207,0.9); 
             transform: translateX(-50%) scale(1.05); 
         }
 

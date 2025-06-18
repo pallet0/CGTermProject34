@@ -68,26 +68,77 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   floor.position.z = -0.05;   // 5㎝ 정도 아래
   group.add(floor);
 
+  // 그림자 전용 투명 플레인 (그림자 표시용)
+  const shadowPlaneGeom = new THREE.PlaneGeometry(20, 20);
+  const shadowMat = new THREE.ShadowMaterial({ opacity: 0.25 });
+  const shadowPlane = new THREE.Mesh(shadowPlaneGeom, shadowMat);
+  shadowPlane.receiveShadow = true;
+  shadowPlane.position.z = 0.001; // seaground(0.5) 바로 위에 살짝 띄워 Z fighting 방지
+  group.add(shadowPlane);
+
   // ---------------- 땅바닥 ----------------
   GLTFloader.load('glsl/seaground.glb', (gltf) => {
     const seaground = gltf.scene;
- 
+
     // 필요하면 스케일·위치 조정
     seaground.rotation.x = Math.PI / 2;
     seaground.scale.set(0.08, 0.08, 0.08);      // 전체 크기
     seaground.position.set(0, 0, 0.5);   // 바닥 기준 위치
 
-    // 그림자 옵션
-    seaground.traverse(obj => {
-      if (obj.isMesh) {
-        obj.castShadow = true;
-        obj.receiveShadow = true;
-      }
+    // 그림자 옵션 + 머티리얼 교체(카우스틱 효과용)
+    environment.loaded.then(() => {
+      seaground.traverse(obj => {
+        if (obj.isMesh) {
+          // 그림자 세팅
+          obj.castShadow = true;
+          obj.receiveShadow = true;
+
+          // geometry 에 color attribute 없으면 추가, 모래색 지정
+          if (!obj.geometry.attributes.color) {
+            const posCount = obj.geometry.attributes.position.count;
+            const colors = new Float32Array(posCount * 3);
+            const sand = new THREE.Color(0xD6B77D); // 더 밝은 모래색
+            for (let i = 0; i < posCount; i++) {
+              colors[i * 3] = sand.r;
+              colors[i * 3 + 1] = sand.g;
+              colors[i * 3 + 2] = sand.b;
+            }
+            obj.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+          }
+
+          // 산호초용 머티리얼을 적용해 컬러가 반영되도록 변경
+          obj.material = environment._reefMaterial;
+        }
+      });
     });
 
     group.add(seaground);
   }, undefined, (err) => {
     console.error('seaground 로드 실패', err);
+  });
+
+  // ---------------- 그림자용 seaground ----------------
+  // 원본 바닥과 동일한 지오메트리를 그림자 전용 ShadowMaterial 로 다시 로드해 사용
+  GLTFloader.load('glsl/seaground.glb', (gltf) => {
+    const seagroundShadow = gltf.scene;
+
+    // 원본과 동일한 위치·회전·스케일 적용 (살짝 위로 올려 Z-fighting 방지)
+    seagroundShadow.rotation.x = Math.PI / 2;
+    seagroundShadow.scale.set(0.08, 0.08, 0.08);
+    seagroundShadow.position.set(0, 0, 0.501); // 1cm 위
+
+    // ShadowMaterial 적용 – 색상 없이 투명 그림자만 표시
+    seagroundShadow.traverse(obj => {
+      if (obj.isMesh) {
+        obj.material = new THREE.ShadowMaterial({ opacity: 0.25 });
+        obj.receiveShadow = true;
+        obj.castShadow = false;
+      }
+    });
+
+    group.add(seagroundShadow);
+  }, undefined, (err) => {
+    console.error('seaground(Shadow) 로드 실패', err);
   });
 
   // ---------------- 대학원 ----------------
@@ -150,8 +201,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
           positionMatrix.makeTranslation(pos[0], pos[1], pos[2]);
           geo.applyMatrix4(positionMatrix);
           
-          // 색상 부여: 산호초1 분홍/연녹  
-           const reefColor1 = new THREE.Color(0x94c46a);
+          // 색상 부여: 산호초1
+           const reefColor1 = new THREE.Color(0xbae7a4);
            const colorArr1 = new Float32Array(geo.attributes.position.count * 3);
            for (let i = 0; i < geo.attributes.position.count; i++) {
              colorArr1[i * 3] = reefColor1.r;
@@ -177,7 +228,8 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   GLTFloader.load('glsl/coralreef2.glb', (gltf) => {
     const positions = [
       [-1, -2, -0.2],
-      [8, -6, 0]
+      [8, -6, 0],
+      [6.1, -2.0, 0]
     ];
     for(const pos of positions){
       console.log("ADDED CORALREEF2");
@@ -207,7 +259,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
           geo.applyMatrix4(positionMatrix);
           
           // 색상 부여: 산호초2
-          const reefColor2 = new THREE.Color(0x9e78ad);
+          const reefColor2 = new THREE.Color(0xc6a6d2);
           const colorArr2 = new Float32Array(geo.attributes.position.count * 3);
           for (let i = 0; i < geo.attributes.position.count; i++) {
             colorArr2[i * 3] = reefColor2.r;
@@ -236,7 +288,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   ]);
   scene.background = skybox;
 
-  const ambient = new THREE.AmbientLight(0x000000, 0.2);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.2);
   group.add(ambient);
 
   // 수조 벽 생성
@@ -458,7 +510,10 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
       this._meshes = geoms.map(g => {
         this._ensureColorAttr(g);
         const mat = g.userData.isReef ? this._reefMaterial : this._baseMaterial;
-        return new THREE.Mesh(g, mat);
+        const mesh = new THREE.Mesh(g, mat);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        return mesh;
       });
     }
 
@@ -515,7 +570,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     caustics.setDeltaEnvTexture(1 / environmentMap.size);
 
     // 초기 잔물결
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 45; i++) {
       waterSimulation.addDrop(renderer, Math.random() * 4 - 2, Math.random() * 4 - 2, 0.12, (i & 1) ? 0.08 : -0.08);
     }
 
@@ -525,7 +580,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
 
   // 자동 물방울 효과를 위한 변수들
   let lastAutoDropTime = 0;
-  const AUTO_DROP_INTERVAL = 50; // 50ms 마다 물방울 생성 (더 빈번하게)
+  const AUTO_DROP_INTERVAL = 30; // 50ms 마다 물방울 생성 (더 빈번하게)
 
   function createRandomDrop() {
     const x = Math.random() * 4 - 2;
