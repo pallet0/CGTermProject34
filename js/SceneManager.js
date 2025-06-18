@@ -47,7 +47,7 @@ class SceneManager {
         
         // 스토리 scenes (1-9)
         for (let i = 1; i <= 9; i++) {
-            this.scenes.push(new StoryScene(8, this.renderer, this.renderer.domElement));
+            this.scenes.push(new StoryScene(i, this.renderer, this.renderer.domElement));
         }
     }
     
@@ -56,20 +56,20 @@ class SceneManager {
         const nextBtn = document.getElementById('next-btn');
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
-                // 타이틀(0) ~ Scene6 까지만 next 로 이동
+                // 타이틀(0) ~ Scene 6까지만 next로 이동
                 if (this.currentSceneIndex >= 0 && this.currentSceneIndex <= 6) {
                     this.nextScene();
                 }
             });
         }
         
-        // Scene 7의 선택지 버튼 이벤트
+        // Scene 5의 선택지 버튼 이벤트
         document.getElementById('choice-a').addEventListener('click', () => {
-            this.goToScene(8); // Scene 8로 이동
+            this.goToScene(6); // Scene 6로 이동
         });
         
         document.getElementById('choice-b').addEventListener('click', () => {
-            this.goToScene(9); // Scene 9로 이동
+            this.goToScene(8); // Scene 8로 이동
         });
     }
     
@@ -95,6 +95,17 @@ class SceneManager {
     
     nextScene() {
         // 다음 scene으로 전환
+
+        if (this.currentSceneIndex === 6){
+            this.transitionToScene(8);
+            return;
+        }
+
+        if (this.currentSceneIndex === 7){
+            this.transitionToScene(9);
+            return;
+        }
+
         const nextIndex = this.currentSceneIndex + 1;
         if (nextIndex < this.scenes.length) {
             this.transitionToScene(nextIndex);
@@ -131,44 +142,37 @@ class SceneManager {
 
             this.controls = new OrbitControls(scene.camera, this.renderer.domElement);
             this.controls.enableDamping = true;
-            this.controls.dampingFactor = 0.008;              // 더 부드럽게 감쇠
-            this.controls.minPolarAngle = Math.PI * 0.1;    // 위로 너무 올라가지 않게
-            this.controls.maxPolarAngle = Math.PI * 0.5;    // 아래로 너무 내려가지 않게
+            this.controls.dampingFactor = 0.008;
+            this.controls.minPolarAngle = Math.PI * 0.1;
+            this.controls.maxPolarAngle = Math.PI * 0.5;
             this.controls.enableZoom = true;
             this.controls.enablePan = true;
 
             const savedLookAt = scene.camera.userData?.lookAt;
             if (savedLookAt) {
                 this.controls.target.set(...savedLookAt);
-                // 한 번 업데이트 해줘야 실제 카메라가 그 방향을 바라봐
                 this.controls.update();
             }
-
 
             // UI 표시 처리
             if (index === 0) {
                 // 타이틀 화면 UI 표시
                 document.getElementById('title-ui').style.display = 'block';
                 document.getElementById('next-btn').style.display = 'block';
-            } else if (index === 7) {
-                // Scene 7 선택지 버튼 표시
-                document.getElementById('choice-buttons').style.display = 'flex';
+                document.getElementById('next-btn').disabled = false; // 타이틀에서는 활성화
+            } else if (index === 5) {
+                // Scene 5: 선택지만 (대화 끝나면 표시됨)
                 document.getElementById('next-btn').style.display = 'none';
-            } else if (index === 8) {
-                // 엔딩 A 표시 (Scene 8 다음)
-                setTimeout(() => {
-                    document.getElementById('ending-a').style.display = 'block';
-                }, 2000);
-            } else if (index === 9) {
-                // 엔딩 B 표시 (Scene 9 다음)
-                setTimeout(() => {
-                    document.getElementById('ending-b').style.display = 'block';
-                }, 2000);
+            } else if (index === 8 || index === 9) {
+                // Scene 8, 9: 엔딩 (대화 끝나면 엔딩 카드 표시됨)
+                document.getElementById('next-btn').style.display = 'none';
             } else {
-                // 일반 스토리 1~6
+                // 일반 스토리 scene들
                 document.getElementById('next-btn').style.display = 'block';
+                document.getElementById('next-btn').disabled = true; // 처음엔 비활성화
             }
 
+            // 디버깅용 이벤트 리스너
             this.controls.addEventListener('change', () => {
                 const pos = scene.camera.position;
                 const target = this.controls.target;
@@ -191,12 +195,14 @@ class SceneManager {
             if (index === 0) {
                 document.getElementById('title-ui').style.display = 'none';
                 document.getElementById('next-btn').style.display = 'none';
-            } else if (index === 7) {
+            } else {
                 document.getElementById('choice-buttons').style.display = 'none';
+                document.getElementById('choice-buttons').style.display = 'none';                
             }
         }
     }
     
+
     hideAllUI() {
         // 모든 UI 요소 숨기기
         document.getElementById('title-ui').style.display = 'none';
@@ -204,6 +210,12 @@ class SceneManager {
         document.getElementById('ending-a').style.display = 'none';
         document.getElementById('ending-b').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('dialogue-tip').style.display = 'none';
+        
+        // 대화 관련 UI 초기화
+        document.getElementById('dialogue-container').innerHTML = '';
+        document.getElementById('dialogue-click-area').style.display = 'none';
+        document.getElementById('dialogue-click-area').classList.remove('active');
     }
     
     onWindowResize() {

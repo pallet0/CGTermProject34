@@ -38,8 +38,8 @@ export function createLabScene({ renderer, scene, camera, SCI }) {
 
   sciPlane.rotation.x = Math.PI / 2;  // 평면을 수평으로 세우는 예시
   sciPlane.rotation.y = Math.PI / 2;  // 평면을 수평으로 세우는 예시
-  sciPlane.scale.set(0.015, 0.015, 0.015);
-  sciPlane.position.set(-1.81, 0.36, -0.1);       // 원하는 위치로 변경 가능
+  sciPlane.scale.set(0.025, 0.025, 0.025);
+  sciPlane.position.set(-1.82, 0.34, 0.95);       // 원하는 위치로 변경 가능
 
   labGroup.add(sciPlane);
   }

@@ -47,6 +47,7 @@
             left: 50%;
             transform: translateX(-50%);
             display: none;
+            justify-content: center; /* flex 중앙 정렬 */
             gap: 2rem;
             z-index: 10;
         }
@@ -70,8 +71,9 @@
         /* Next 버튼 */
         .next-button {
             position: absolute;
-            left: 47.5%;
+            left: 50%;
             bottom: 15%;
+            transform: translateX(-50%); /* 중앙 정렬 */
             padding: 1.5rem 2.3rem;
             font-size: 1.3rem;
             background-color: #5c8ab3;
@@ -85,6 +87,37 @@
         }
         .next-button:hover { background-color: #4a769b; transform: scale(1.05); }
         
+        .next-button:disabled {
+            background-color: #999;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .next-button:disabled:hover {
+            background-color: #999;
+            transform: translateX(-50%); /* hover시에도 중앙 유지 */
+        }
+        
+        .next-button:not(:disabled):hover { 
+            background-color: #4a769b; 
+            transform: translateX(-50%) scale(1.05); 
+        }
+
+        .dialogue-tip {
+            position: absolute;
+            left: 50%;
+            bottom: 25%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 10;
+            display: none;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
         /* 엔딩 카드 스타일 */
         .ending-card {
             position: absolute;
@@ -93,8 +126,14 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #4a4a4a;
+            padding: 20px 100px;
+            background-color: #ddd;
+            border: 1em black solid;
+            border-radius: 10px;
             z-index: 10;
             display: none;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
         }
         
         .ending-card h2 {
@@ -145,13 +184,161 @@
             0%, 100% { opacity: 0.3; }
             30%, 60% { opacity: 1; }
         }
-    </style>
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* 말풍선 컨테이너 */
+        #dialogue-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            height: 60%;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        /* 말풍선 래퍼 (프로필 + 말풍선) */
+        .dialogue-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .dialogue-wrapper.left {
+            flex-direction: row;
+        }
+        
+        .dialogue-wrapper.right {
+            flex-direction: row-reverse;
+        }
+        
+        /* 프로필 이미지 */
+        .dialogue-profile {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+        
+        /* 말풍선 */
+        .dialogue-bubble {
+            position: relative;
+            background-color: #ffffff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 70%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #333;
+            word-wrap: break-word;
+        }
+        
+        /* 말풍선 꼬리 */
+        .dialogue-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+        
+        .dialogue-wrapper.left .dialogue-bubble {
+            background-color: #e8f4fd;
+            margin-left: 8px;
+        }
+        
+        .dialogue-wrapper.left .dialogue-bubble::after {
+            left: -8px;
+            border-right-color: #e8f4fd;
+            border-left: 0;
+        }
+        
+        .dialogue-wrapper.right .dialogue-bubble {
+            background-color: #fff3cd;
+            margin-right: 8px;
+        }
+        
+        .dialogue-wrapper.right .dialogue-bubble::after {
+            right: -8px;
+            border-left-color: #fff3cd;
+            border-right: 0;
+        }
+        
+        /* 화면 클릭 가능 영역 */
+        #dialogue-click-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            cursor: pointer;
+            display: none;
+            pointer-events: none; /* 기본적으로 클릭 이벤트 통과 */
+        }
+
+        #dialogue-click-area.active {
+            pointer-events: auto;
+        }
+
+        /* 드래그 중일 때 커서 변경 */
+        #dialogue-click-area.dragging {
+            cursor: grabbing;
+        }
+
+        /* 스크롤바 스타일 */
+        #dialogue-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #dialogue-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+        
+        #dialogue-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        </style>
 </head>
 <body>
     <div id="canvas-container">
         <!-- Three.js 캔버스가 여기에 추가됩니다 -->
     </div>
     
+    <div id="dialogue-container"></div>
+    <div id="dialogue-click-area"></div>
+    <div class="dialogue-tip" id="dialogue-tip">Tip: 화면 아무 곳이나 눌러 대화를 진행하세요!</div>
     <!-- 타이틀 화면 UI -->
     <div id="title-ui">
         <img src="/glsl/title.png">
