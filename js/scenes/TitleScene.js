@@ -35,6 +35,8 @@ class TitleScene {
         directionalLight.position.set(5, 10, 5);
         directionalLight.castShadow = true;
         this.scene.add(directionalLight);
+
+        directionalLight.shadow.mapSize.set(1024, 1024);
     }
     
     setup3DElements() {
