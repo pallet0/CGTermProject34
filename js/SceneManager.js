@@ -57,7 +57,7 @@ class SceneManager {
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
                 // 타이틀(0) ~ Scene 6까지만 next로 이동
-                if (this.currentSceneIndex >= 0 && this.currentSceneIndex <= 6) {
+                if (this.currentSceneIndex >= 0 && this.currentSceneIndex <= 9) {
                     this.nextScene();
                 }
             });
@@ -69,7 +69,7 @@ class SceneManager {
         });
         
         document.getElementById('choice-b').addEventListener('click', () => {
-            this.goToScene(8); // Scene 8로 이동
+            this.goToScene(7); // Scene 7로 이동
         });
     }
     
