@@ -13,9 +13,11 @@ class TitleScene {
             0.1,
             1000
         );
-        this.camera.position.set(0, 5, 10);
+        this.camera.position.set(0.1, 0.0, 0.9);
         this.camera.lookAt(0, 0, 0);
-        
+
+        console.log("FOREST LOADING");
+
         // 조명 설정
         this.setupLights();
         
@@ -37,16 +39,16 @@ class TitleScene {
     
     setup3DElements() {
         // 바다를 나타내는 평면
-        const seaGeometry = new THREE.PlaneGeometry(30, 30);
-        const seaMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0x4a90e2,
-            transparent: true,
-            opacity: 0.8
+        const { group: forestGroup, skybox } = createForestScene({
+            scene: this.scene,
+            camera: this.camera
         });
-        const sea = new THREE.Mesh(seaGeometry, seaMaterial);
-        sea.rotation.x = -Math.PI / 2;
-        sea.position.y = -2;
-        this.scene.add(sea);
+        forestGroup.rotation.x = -Math.PI/2;
+        forestGroup.position.set(0, 0, -15);
+
+        this.scene.add(forestGroup);
+        // 배경을 숲 하늘로 바꾸고 싶으면 아래 한 줄도 추가해주냥!
+        this.scene.background = skybox;
         
         // 떠다니는 구름 효과 (몽글몽글한 분위기)
         this.clouds = [];
@@ -65,7 +67,7 @@ class TitleScene {
             cloud.position.set(
                 Math.random() * 20 - 10,
                 Math.random() * 5 + 3,
-                Math.random() * 10 - 5
+                Math.random() * 10
             );
             cloud.scale.x = 2;
             this.clouds.push(cloud);
