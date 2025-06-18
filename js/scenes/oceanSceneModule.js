@@ -10,6 +10,7 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   const waterSize = 512;
   const width = canvas.width;
   const height = canvas.height;
+  const GLTFloader = new GLTFLoader();
 
   // 클럭
   const clock = new THREE.Clock();
@@ -37,16 +38,37 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
   group.add(floor);
 
+  // ---------------- 땅바닥 ----------------
+  GLTFloader.load('glsl/seaground.glb', (gltf) => {
+    const seaground = gltf.scene;
+ 
+    // 필요하면 스케일·위치 조정
+    seaground.rotation.x = Math.PI / 2;
+    seaground.scale.set(0.08, 0.08, 0.08);      // 전체 크기
+    seaground.position.set(0, 0, 0.5);   // 바닥 기준 위치
+
+    // 그림자 옵션
+    seaground.traverse(obj => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+
+    group.add(seaground);
+  }, undefined, (err) => {
+    console.error('seaground 로드 실패', err);
+  });
+
   // ---------------- 대학원 ----------------
-  const GLTFloader = new GLTFLoader();
   GLTFloader.load('glsl/college.glb', (gltf) => {
     const college = gltf.scene;
 
     // 필요하면 스케일·위치 조정
     college.rotation.x = Math.PI / 2;
     college.rotation.y = -2;
-    college.scale.set(0.2, 0.2, 0.2);      // 전체 크기
-    college.position.set(4, 4, 1.3);   // 바닥 기준 위치
+    college.scale.set(0.25, 0.25, 0.25);      // 전체 크기
+    college.position.set(4.5, 4.5, 1.55);   // 바닥 기준 위치
 
     // 그림자 옵션
     college.traverse(obj => {
@@ -62,7 +84,68 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
   });
 
 
+  // ---------------- 산호초1 ----------------
+  GLTFloader.load('glsl/coralreef1.glb', (gltf) => {
+    const positions = [
+      [-1, 2, -0.05],
+      [3, -4, -0.1],
+      [-5, 5, -0.05],
+      [5, 5, -0.05]
+    ];
+    for(const pos of positions){
 
+      console.log("ADDED CORALREEF1");
+      const coralreef1 = gltf.scene.clone();
+  
+      // 필요하면 스케일·위치 조정
+      coralreef1.rotation.x = Math.PI / 2;
+      coralreef1.scale.set(1, 1, 1);      // 전체 크기
+      coralreef1.position.set(...pos);   // 바닥 기준 위치
+
+      // 그림자 옵션
+      coralreef1.traverse(obj => {
+        if (obj.isMesh) {
+          obj.castShadow = true;
+          obj.receiveShadow = true;
+        }
+      });
+
+      group.add(coralreef1);
+    }
+  }, undefined, (err) => {
+    console.error('coralreef1 로드 실패', err);
+  });
+
+
+  // ---------------- 산호초2 ----------------
+  GLTFloader.load('glsl/coralreef2.glb', (gltf) => {
+    const positions = [
+      [-1, -2, -0.2],
+      [8, -6, 0]
+    ];
+    for(const pos of positions){
+
+      console.log("ADDED CORALREEF2");
+      const coralreef2 = gltf.scene.clone();
+  
+      // 필요하면 스케일·위치 조정
+      coralreef2.rotation.x = Math.PI / 2;
+      coralreef2.scale.set(0.7, 0.7, 0.7);      // 전체 크기
+      coralreef2.position.set(...pos);   // 바닥 기준 위치
+
+      // 그림자 옵션
+      coralreef2.traverse(obj => {
+        if (obj.isMesh) {
+          obj.castShadow = true;
+          obj.receiveShadow = true;
+        }
+      });
+
+      group.add(coralreef2);
+    }
+  }, undefined, (err) => {
+    console.error('coralreef2 로드 실패', err);
+  });
 
   // Skybox
   const cubetextureloader = new THREE.CubeTextureLoader();
@@ -343,6 +426,6 @@ export function createOceanScene({ renderer, camera, canvas, scene, stats }) {
     water.mesh.visible = true;
     renderer.setRenderTarget(null);
   }
-
+  
   return { group, update };
 } 

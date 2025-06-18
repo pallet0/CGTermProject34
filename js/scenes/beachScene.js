@@ -14,11 +14,15 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   const clock = new THREE.Clock();
 
   // 임시 렌더타겟 (굴절 맵용)
-  const temporaryRenderTarget = new THREE.WebGLRenderTarget(width, height);
+  const temporaryRenderTarget = new THREE.WebGLRenderTarget(waterSize, waterSize);
+  temporaryRenderTarget.texture.generateMipmaps = true;
+  temporaryRenderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
 
-  // 그룹 생성 후 root scene 에 추가
+  // 씬에 넣을 그룹
   const group = new THREE.Group();
   scene.add(group);
+  // 그룹 전체 스케일 2배 적용
+  group.scale.set(2, 2, 2);
 
   // 색상
   const black = new THREE.Color('black');
@@ -27,8 +31,9 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
   // 라이트
   const light = [0., 0., -1.];
   const lightCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, near, far);
-  lightCamera.position.set(0., 0., 0.5);
-  lightCamera.lookAt(0, 0, 0);
+  lightCamera.position.copy(new THREE.Vector3().fromArray(light));
+  lightCamera.lookAt(new THREE.Vector3(0, 0, 0));
+  group.add(lightCamera);
 
   // 지면 (바닥)
   const floorGeometry = new THREE.PlaneGeometry(4, 4, 1, 1);

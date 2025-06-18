@@ -47,7 +47,7 @@ class SceneManager {
         
         // 스토리 scenes (1-9)
         for (let i = 1; i <= 9; i++) {
-            this.scenes.push(new StoryScene(i, this.renderer, this.renderer.domElement));
+            this.scenes.push(new StoryScene(8, this.renderer, this.renderer.domElement));
         }
     }
     
@@ -131,16 +131,19 @@ class SceneManager {
 
             this.controls = new OrbitControls(scene.camera, this.renderer.domElement);
             this.controls.enableDamping = true;
-            this.controls.dampingFactor = 0.1;              // 더 부드럽게 감쇠
-            this.controls.minPolarAngle = Math.PI * 0.2;    // 위로 너무 올라가지 않게
+            this.controls.dampingFactor = 0.008;              // 더 부드럽게 감쇠
+            this.controls.minPolarAngle = Math.PI * 0.1;    // 위로 너무 올라가지 않게
             this.controls.maxPolarAngle = Math.PI * 0.5;    // 아래로 너무 내려가지 않게
-            this.controls.enableZoom = false;
-            
+            this.controls.enableZoom = true;
+            this.controls.enablePan = true;
+
             const savedLookAt = scene.camera.userData?.lookAt;
             if (savedLookAt) {
                 this.controls.target.set(...savedLookAt);
+                // 한 번 업데이트 해줘야 실제 카메라가 그 방향을 바라봐
                 this.controls.update();
             }
+
 
             // UI 표시 처리
             if (index === 0) {
@@ -169,8 +172,12 @@ class SceneManager {
             this.controls.addEventListener('change', () => {
                 const pos = scene.camera.position;
                 const target = this.controls.target;
-                console.log('카메라 위치:', `[${pos.x.toFixed(1)}, ${pos.y.toFixed(1)}, ${pos.z.toFixed(1)}]`);
-                console.log('카메라 방향:', `[${target.x.toFixed(1)}, ${target.y.toFixed(1)}, ${target.z.toFixed(1)}]`);
+                const yawRad = this.controls.getAzimuthalAngle();
+                const polar = this.controls.getPolarAngle();  
+                console.log('카메라 Position:', `[${pos.x.toFixed(1)}, ${pos.y.toFixed(1)}, ${pos.z.toFixed(1)}]`);
+                console.log('카메라 LookAt:', `[${target.x.toFixed(1)}, ${target.y.toFixed(1)}, ${target.z.toFixed(1)}]`);
+                console.log('카메라 Global 기준 Rotation Y:', `[${yawRad.toFixed(1)}]`);
+                console.log('카메라 Global 기준 Rotation Z:', `[${(polar - Math.PI/2).toFixed(1)}]`)
             });
         }
     }
