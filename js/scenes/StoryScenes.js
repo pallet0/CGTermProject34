@@ -83,6 +83,7 @@ class StoryScene {
             // const blueLight = new THREE.PointLight(0x4488ff, 0.5);
             // blueLight.position.set(0, 15, 0);
             // this.scene.add(blueLight);
+            
         } else if (this.sceneNumber === 2) {
             // 해안 scenes - 밝은 햇빛
             const sunLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
@@ -120,9 +121,7 @@ class StoryScene {
             this.scene.add(sun.target);
             this.scene.add(sun);
 
-            // 그림자 디버그용 카메라 헬퍼 추가
-            const helper = new THREE.CameraHelper(sun.shadow.camera);
-            this.scene.add(helper);
+            
         }
     }
     

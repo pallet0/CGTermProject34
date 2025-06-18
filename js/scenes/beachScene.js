@@ -164,13 +164,14 @@ export function createBeachScene({ renderer, camera, canvas, scene, stats }) {
     }
 
     addDrop(renderer, x, y, radius, strength) {
+      if (!this._dropMesh || !this._dropMesh.material) return; // 로딩 전이면 무시
       this._dropMesh.material.uniforms['center'].value = [x, y];
       this._dropMesh.material.uniforms['radius'].value = radius;
       this._dropMesh.material.uniforms['strength'].value = strength;
       this._render(renderer, this._dropMesh);
     }
 
-    stepSimulation(renderer) { this._render(renderer, this._updateMesh); }
+    stepSimulation(renderer) { if (this._updateMesh) this._render(renderer, this._updateMesh); }
 
     _render(renderer, mesh) {
       const _oldTarget = this.target;

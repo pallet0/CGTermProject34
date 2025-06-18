@@ -1,12 +1,15 @@
 uniform sampler2D caustics;
+uniform vec3 baseColor;
 
 varying float lightIntensity;
 varying vec3 lightPosition;
+varying vec3 vColor;
 
 const float bias = 0.001;
 
-//바다색
+//바다색 영향
 const vec3 underwaterColor = vec3(0.3, 0.7, 0.9);
+const float underwaterInfluence = 0.15;
 
 const vec2 resolution = vec2(1024.);
 
@@ -41,5 +44,7 @@ void main() {
     computedLightIntensity += causticsIntensity * smoothstep(0., 1., lightIntensity);;
   }
 
-  gl_FragColor = vec4(underwaterColor * computedLightIntensity, 1.);
+  // 원래 색상과 물 속 색상을 혼합 (baseColor 대신 vColor 사용)
+  vec3 finalColor = mix(vColor, underwaterColor, underwaterInfluence) * computedLightIntensity;
+  gl_FragColor = vec4(finalColor, 1.0);
 }
